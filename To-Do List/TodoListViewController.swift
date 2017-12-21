@@ -8,11 +8,13 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class TodoListViewController: UITableViewController {
 
+    let cellId = "todoCell"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        tableView.register(TodoListTableViewCell.self, forCellReuseIdentifier: cellId)
     }
 
     override func didReceiveMemoryWarning() {
@@ -21,5 +23,9 @@ class ViewController: UIViewController {
     }
 
 
+    
 }
+
+
+
 
