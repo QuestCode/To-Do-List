@@ -20,6 +20,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         navigationController.navigationBar.tintColor = UIColor(rgb: 0xfd8208)
         navigationController.navigationBar.barStyle = .black
         
+        // For Bar Title
+        let attr = [
+            NSAttributedStringKey.foregroundColor: UIColor(rgb: 0xfd8208),
+            NSAttributedStringKey.font : UIFont(name: "AppleSDGothicNeo-Regular", size: 20)!
+        ]
+        navigationController.navigationBar.titleTextAttributes = attr
+        
         self.window = UIWindow(frame: UIScreen.main.bounds)
         self.window?.rootViewController = navigationController
         self.window?.makeKeyAndVisible()
