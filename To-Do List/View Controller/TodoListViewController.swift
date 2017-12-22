@@ -8,7 +8,8 @@
 
 import UIKit
 
-class TodoTableViewController: UITableViewController, NewTodoTableViewControllerProtocol {
+class TodoTableViewController: UITableViewController, NewTodoTableViewControllerProtocol, TodoTableViewCellProtocol {
+    
 
     let cellId = "todoCell"
     var todos = [Todo]()
@@ -18,7 +19,6 @@ class TodoTableViewController: UITableViewController, NewTodoTableViewController
         
         self.title = "To-Do List"
         
-        self.navigationItem.leftBarButtonItem = self.editButtonItem
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewTodo(_:)))
         
         
@@ -26,6 +26,7 @@ class TodoTableViewController: UITableViewController, NewTodoTableViewController
             todos = savedTodos
         } else {
             todos = Todo.loadSampleTodos()
+            todos[0].isComplete = true
         }
         self.tableView.register(TodoTableViewCell.self, forCellReuseIdentifier: cellId)
     }
@@ -41,11 +42,23 @@ class TodoTableViewController: UITableViewController, NewTodoTableViewController
         self.navigationController?.pushViewController(dvc, animated: true)
     }
     
+    
+    func checkmarkTapped(sender: TodoTableViewCell) {
+        
+        if let indexPath = tableView.indexPath(for: sender) {
+            let todo = todos[indexPath.row]
+            todo.isComplete = !todo.isComplete
+            todos[indexPath.row] = todo
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+        }
+    }
+    
     func addTodo(todo: Todo) {
         self.todos.append(todo)
         tableView.reloadData()
     }
     
+    //MARK: Tableview delegate and datasource
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
@@ -66,27 +79,25 @@ class TodoTableViewController: UITableViewController, NewTodoTableViewController
         
         cell.titleLabel.text = todo.title
         cell.notesLabel.text = todo.notes!
+        cell.completedButton.isSelected = todo.isComplete
         
-        if todo.isComplete {
-            cell.completedImageView.renderImage(image: UIImage(named: "check_on")!, color: UIColor(rgb: 0xfd8208))
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .full
+        dateFormatter.dateFormat = "MM/dd/yy h:mm a"
+        
+        cell.dueDateLabel.text = dateFormatter.string(from: todo.dueDate)
+        
+        cell.completedButton.tintColor = UIColor(rgb: 0xfd8208)
+        cell.delegate = self
+        if cell.completedButton.isSelected{
+            // Have to render image to change color of image
+            let image = UIImage(named: "check_on")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+            cell.completedButton.setImage(image, for: .normal)
         } else {
-            cell.completedImageView.renderImage(image: UIImage(named: "check_off")!, color: UIColor(rgb: 0xfd8208))
+            let image = UIImage(named: "check_off")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+            cell.completedButton.setImage(image, for: .normal)
         }
-        
         return cell
-    }
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        let cell = tableView.cellForRow(at: indexPath) as! TodoTableViewCell
-        let todo = todos[indexPath.row]
-        todo.isComplete = !todo.isComplete
-        
-        if todo.isComplete {
-            cell.completedImageView.renderImage(image: UIImage(named: "check_on")!, color: UIColor(rgb: 0xfd8208))
-        } else {
-            cell.completedImageView.renderImage(image: UIImage(named: "check_off")!, color: UIColor(rgb: 0xfd8208))
-        }
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

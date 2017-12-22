@@ -26,9 +26,9 @@ class Todo {
     
     static func loadSampleTodos() -> [Todo] {
         return [
-            Todo(title: "Todo One",dueDate: Date(), notes: "Notes 1"),
-            Todo(title: "Todo Two",dueDate: Date(), notes: "Notes 2"),
-            Todo(title: "Todo Three",dueDate: Date(), notes: "Notes 3")
+            Todo(title: "Contact Bern",dueDate: Date(), notes: "Talk about programming in Swift"),
+            Todo(title: "Research Swift Designs",dueDate: Date(), notes: "Find some inspiration!"),
+            Todo(title: "Daily Quote",dueDate: Date(), notes: "I am extraordinarily patient, provided I get my own way in the end.\n -Margaret Thatcher")
         ]
     }
     
