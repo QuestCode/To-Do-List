@@ -8,8 +8,22 @@
 
 import UIKit
 
-class TodoListTableViewCell: UITableViewCell {
-
+class TodoTableViewCell: UITableViewCell {
+    
+    let titleLabel: UILabel = {
+        let label = UILabel(fontSize: 24)
+        return label
+    }()
+    
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupViews()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -19,6 +33,13 @@ class TodoListTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
+    }
+    
+    func setupViews() {
+        addSubview(titleLabel)
+        
+        addContraintsWithFormat(format: "H:|-10-[v0]", views: titleLabel)
+        addContraintsWithFormat(format: "V:|[v0]|", views: titleLabel)
     }
 
 }
