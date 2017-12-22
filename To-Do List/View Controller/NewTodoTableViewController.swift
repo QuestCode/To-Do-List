@@ -47,7 +47,7 @@ class NewTodoTableViewController: UITableViewController {
     }
     
     var todo: Todo? {
-        return Todo(title: titleTextField.text!, isComplete: false, dueDate: dueDatePicker.date, notes: notesTextView.text)
+        return Todo(title: titleTextField.text!, dueDate: dueDatePicker.date, notes: notesTextView.text)
     }
     
     

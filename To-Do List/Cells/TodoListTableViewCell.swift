@@ -10,8 +10,19 @@ import UIKit
 
 class TodoTableViewCell: UITableViewCell {
     
+    let completedImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
     let titleLabel: UILabel = {
         let label = UILabel(fontSize: 24)
+        return label
+    }()
+    
+    let notesLabel: UILabel = {
+        let label = UILabel(fontSize: 18)
         return label
     }()
     
@@ -37,9 +48,15 @@ class TodoTableViewCell: UITableViewCell {
     
     func setupViews() {
         addSubview(titleLabel)
+        addSubview(completedImageView)
+        addSubview(notesLabel)
         
         addContraintsWithFormat(format: "H:|-10-[v0]", views: titleLabel)
-        addContraintsWithFormat(format: "V:|[v0]|", views: titleLabel)
+        addContraintsWithFormat(format: "V:|[v0]-5-[v1]|", views: titleLabel,notesLabel)
+        addContraintsWithFormat(format: "H:|-10-[v0]-50-|", views: notesLabel)
+        addContraintsWithFormat(format: "V:|-25-[v0(30)]|", views: completedImageView)
+        addContraintsWithFormat(format: "H:[v0(30)]-10-|", views:completedImageView)
     }
+    
 
 }

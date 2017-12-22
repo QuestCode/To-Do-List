@@ -65,23 +65,27 @@ class TodoTableViewController: UITableViewController, NewTodoTableViewController
         let todo = todos[indexPath.row]
         
         cell.titleLabel.text = todo.title
+        cell.notesLabel.text = todo.notes!
+        
+        if todo.isComplete {
+            cell.completedImageView.renderImage(image: UIImage(named: "check_on")!, color: UIColor(rgb: 0xfd8208))
+        } else {
+            cell.completedImageView.renderImage(image: UIImage(named: "check_off")!, color: UIColor(rgb: 0xfd8208))
+        }
         
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let cell = tableView.cellForRow(at: indexPath)
-        var todo = todos[indexPath.row]
+        let cell = tableView.cellForRow(at: indexPath) as! TodoTableViewCell
+        let todo = todos[indexPath.row]
         todo.isComplete = !todo.isComplete
         
-        print("\(todo.isComplete)")
         if todo.isComplete {
-            cell?.accessoryType = .checkmark
-            print("CHECK")
+            cell.completedImageView.renderImage(image: UIImage(named: "check_on")!, color: UIColor(rgb: 0xfd8208))
         } else {
-            cell?.accessoryType = .none
-            print("NONE")
+            cell.completedImageView.renderImage(image: UIImage(named: "check_off")!, color: UIColor(rgb: 0xfd8208))
         }
     }
     

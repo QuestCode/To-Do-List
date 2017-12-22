@@ -12,7 +12,7 @@
 		219261BA1FEC6E5A00F09045 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 219261B91FEC6E5A00F09045 /* Assets.xcassets */; };
 		219261BD1FEC6E5A00F09045 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 219261BB1FEC6E5A00F09045 /* LaunchScreen.storyboard */; };
 		219261C61FEC716200F09045 /* TodoListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219261C51FEC716200F09045 /* TodoListTableViewCell.swift */; };
-		219261C91FEC71B300F09045 /* Structs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219261C81FEC71B300F09045 /* Structs.swift */; };
+		219261C91FEC71B300F09045 /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219261C81FEC71B300F09045 /* Todo.swift */; };
 		219261CB1FEC740000F09045 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219261CA1FEC740000F09045 /* Extensions.swift */; };
 		219261CE1FEC90F500F09045 /* NewTodoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219261CD1FEC90F500F09045 /* NewTodoTableViewController.swift */; };
 /* End PBXBuildFile section */
@@ -25,7 +25,7 @@
 		219261BC1FEC6E5A00F09045 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		219261BE1FEC6E5A00F09045 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		219261C51FEC716200F09045 /* TodoListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListTableViewCell.swift; sourceTree = "<group>"; };
-		219261C81FEC71B300F09045 /* Structs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Structs.swift; sourceTree = "<group>"; };
+		219261C81FEC71B300F09045 /* Todo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Todo.swift; sourceTree = "<group>"; };
 		219261CA1FEC740000F09045 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		219261CD1FEC90F500F09045 /* NewTodoTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTodoTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -61,7 +61,7 @@
 			isa = PBXGroup;
 			children = (
 				219261B21FEC6E5A00F09045 /* AppDelegate.swift */,
-				219261C81FEC71B300F09045 /* Structs.swift */,
+				219261C81FEC71B300F09045 /* Todo.swift */,
 				219261CA1FEC740000F09045 /* Extensions.swift */,
 				219261C41FEC713F00F09045 /* Cells */,
 				219261CC1FEC90BD00F09045 /* View Controller */,
@@ -162,7 +162,7 @@
 			files = (
 				219261CE1FEC90F500F09045 /* NewTodoTableViewController.swift in Sources */,
 				219261CB1FEC740000F09045 /* Extensions.swift in Sources */,
-				219261C91FEC71B300F09045 /* Structs.swift in Sources */,
+				219261C91FEC71B300F09045 /* Todo.swift in Sources */,
 				219261B51FEC6E5A00F09045 /* TodoListViewController.swift in Sources */,
 				219261B31FEC6E5A00F09045 /* AppDelegate.swift in Sources */,
 				219261C61FEC716200F09045 /* TodoListTableViewCell.swift in Sources */,

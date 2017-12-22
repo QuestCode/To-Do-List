@@ -17,6 +17,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         let navigationController = UINavigationController(rootViewController: TodoTableViewController())
+        navigationController.navigationBar.tintColor = UIColor(rgb: 0xfd8208)
+        navigationController.navigationBar.barStyle = .black
         
         self.window = UIWindow(frame: UIScreen.main.bounds)
         self.window?.rootViewController = navigationController
