@@ -154,6 +154,8 @@ class TodoTableViewController: UITableViewController, NewTodoTableViewController
         if editingStyle == .delete {
             todos.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
+            updateTaskCount()
+            tableView.reloadData()
             Todo.saveTodos(todos)
         }
     }
