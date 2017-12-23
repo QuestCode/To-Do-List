@@ -30,6 +30,7 @@ class TodoTableViewCell: UITableViewCell {
     
     let dueDateLabel: UILabel = {
         let label = UILabel(fontSize: 14)
+        label.textAlignment = .right
         return label
     }()
     
@@ -67,13 +68,13 @@ class TodoTableViewCell: UITableViewCell {
         completedButton.addTarget(self, action: #selector(completedButtonTapped(button:)), for: .touchUpInside)
         
         
-        addContraintsWithFormat(format: "H:|-10-[v0]", views: titleLabel)
+        addContraintsWithFormat(format: "H:|-10-[v0(210)]", views: titleLabel)
         addContraintsWithFormat(format: "V:|-5-[v0(24)][v1]|", views: titleLabel,notesLabel)
         addContraintsWithFormat(format: "H:|-10-[v0]-50-|", views: notesLabel)
         addContraintsWithFormat(format: "V:|-25-[v0(30)]", views: completedButton)
         addContraintsWithFormat(format: "H:[v0(30)]-10-|", views:completedButton)
         
-        addContraintsWithFormat(format: "H:[v0]-50-|", views: dueDateLabel)
+        addContraintsWithFormat(format: "H:[v0]-40-|", views: dueDateLabel)
         addContraintsWithFormat(format: "V:|-10-[v0]", views: dueDateLabel)
     }
     

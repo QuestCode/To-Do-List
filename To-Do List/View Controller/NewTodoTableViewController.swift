@@ -20,7 +20,6 @@ class NewTodoTableViewController: UITableViewController {
     
     let titleTextField = UITextField(placeholder: "Title")
     
-    let dueDateTitleLabel = UILabel(fontSize: 24)
     let dueDateLabel: UILabel = {
         let label = UILabel(fontSize: 18)
         label.textAlignment = .right
@@ -104,22 +103,39 @@ class NewTodoTableViewController: UITableViewController {
     }
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 30))
-       headerView.backgroundColor = .gray
-        let titleLabel = UILabel(fontSize: 15)
-        titleLabel.frame = headerView.frame
+        headerView.backgroundColor = UIColor(rgb: 0xfd8208)
+        
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let titleLabel = UILabel(fontSize: 20)
+        titleLabel.textAlignment = .left
+        titleLabel.textColor = .black
+        
+        headerView.addSubview(imageView)
         headerView.addSubview(titleLabel)
-        return headerView
-    }
-    
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        
+        headerView.addContraintsWithFormat(format: "H:|-10-[v0(30)]-15-[v1]|", views: imageView,titleLabel)
+        headerView.addContraintsWithFormat(format: "V:|-5-[v0(30)]-5-|", views: imageView)
+        headerView.addContraintsWithFormat(format: "V:|[v0]|", views: titleLabel)
+        
         switch section {
-            case 0: return "Basic Info"
-            case 1: return "Date"
-            case 2: return "Notes"
-            default: return ""
+            case 0:
+                imageView.renderImage(image: UIImage(named: "info")!, color: .gray)
+                titleLabel.text = "Basic Info"
+                return headerView
+            case 1:
+                imageView.renderImage(image: UIImage(named: "time")!, color: .gray)
+                titleLabel.text = "Date"
+                return headerView
+            case 2:
+                imageView.renderImage(image: UIImage(named: "notes")!, color: .gray)
+                titleLabel.text = "Notes"
+                return headerView
+            default: return headerView
         }
     }
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
             case 0: return 1
@@ -139,11 +155,8 @@ class NewTodoTableViewController: UITableViewController {
             cell.addContraintsWithFormat(format: "V:|[v0]|", views: titleTextField)
             break
         case (dueDateIndexPath.section,dueDateIndexPath.row):
-            dueDateTitleLabel.text = "Due Date: "
-            cell.addSubview(dueDateTitleLabel)
             cell.addSubview(dueDateLabel)
-            cell.addContraintsWithFormat(format: "H:|-10-[v0][v1]-10-|", views: dueDateTitleLabel,dueDateLabel)
-            cell.addContraintsWithFormat(format: "V:|[v0]|", views: dueDateTitleLabel)
+            cell.addContraintsWithFormat(format: "H:[v0]-10-|", views: dueDateLabel)
             cell.addContraintsWithFormat(format: "V:|[v0]|", views: dueDateLabel)
             break
         case (dueDatePickerIndexPath.section,dueDatePickerIndexPath.row):
