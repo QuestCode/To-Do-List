@@ -28,6 +28,7 @@ class TodoTableViewController: UITableViewController, NewTodoTableViewController
         } else {
             todos = Todo.loadSampleTodos()
             todos[0].isComplete = true
+            Todo.saveTodos(todos)
         }
         updateTaskCount()
         self.tableView.backgroundColor = .white
@@ -121,8 +122,11 @@ class TodoTableViewController: UITableViewController, NewTodoTableViewController
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! TodoTableViewCell
         cell.selectionStyle = .none
         cell.backgroundColor = .white
+        
+        // Create a todo object for each object in array
         let todo = todos[indexPath.row]
         
+        // Set labels 
         cell.titleLabel.text = todo.title
         cell.notesLabel.text = todo.notes!
         cell.completedButton.isSelected = todo.isComplete
