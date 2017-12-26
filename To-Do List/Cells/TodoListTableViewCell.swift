@@ -9,11 +9,11 @@
 import UIKit
 
 @objc protocol TodoTableViewCellProtocol {
-    func checkmarkTapped(sender: TodoTableViewCell)
+    func checkmarkTapped(sender: TodoCollectionViewCell)
 }
 
 
-class TodoTableViewCell: UITableViewCell {
+class TodoCollectionViewCell: UICollectionViewCell {
     
     var delegate: TodoTableViewCellProtocol?
     
@@ -21,6 +21,13 @@ class TodoTableViewCell: UITableViewCell {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
+    }()
+    
+    let selectionView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .white
+        return view
     }()
     
     let titleLabel: UILabel = {
@@ -39,8 +46,8 @@ class TodoTableViewCell: UITableViewCell {
         return label
     }()
     
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         setupViews()
     }
     
@@ -52,30 +59,23 @@ class TodoTableViewCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
     }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
     
     func setupViews() {
         addSubview(titleLabel)
         addSubview(completedButton)
-        addSubview(notesLabel)
         addSubview(dueDateLabel)
+        addSubview(selectionView)
         
         completedButton.addTarget(self, action: #selector(completedButtonTapped(button:)), for: .touchUpInside)
         
-        
-        addContraintsWithFormat(format: "H:|-10-[v0(210)]", views: titleLabel)
-        addContraintsWithFormat(format: "V:|-5-[v0(24)][v1]|", views: titleLabel,notesLabel)
-        addContraintsWithFormat(format: "H:|-10-[v0]-50-|", views: notesLabel)
-        addContraintsWithFormat(format: "V:|-25-[v0(30)]", views: completedButton)
+        addContraintsWithFormat(format: "H:|[v0(5)]", views: selectionView)
+        addContraintsWithFormat(format: "V:|[v0]|", views: selectionView)
+        addContraintsWithFormat(format: "H:|-10-[v0]", views: titleLabel)
+        addContraintsWithFormat(format: "V:|-10-[v0]-5-[v1]", views: dueDateLabel,titleLabel)
+        addContraintsWithFormat(format: "V:|-35-[v0(30)]", views: completedButton)
         addContraintsWithFormat(format: "H:[v0(30)]-10-|", views:completedButton)
         
-        addContraintsWithFormat(format: "H:[v0]-40-|", views: dueDateLabel)
-        addContraintsWithFormat(format: "V:|-10-[v0]", views: dueDateLabel)
+        addContraintsWithFormat(format: "H:|-10-[v0]", views: dueDateLabel)
     }
     
     

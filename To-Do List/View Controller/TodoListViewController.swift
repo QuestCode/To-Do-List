@@ -15,7 +15,7 @@ class TodoTableViewController: UIViewController, NewTodoTableViewControllerProto
     var todos = [Todo]()
     var numOfTaskDone = 0
     
-    let tableView = UITableView()
+    var collectionView: UICollectionView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,21 +54,28 @@ class TodoTableViewController: UIViewController, NewTodoTableViewControllerProto
         
         self.view.addSubview(bgView)
         self.view.addSubview(blurEffectView)
-        self.view.addSubview(tableView)
         
-//        self.tableView.backgroundColor = .white
-        self.tableView.separatorColor = .clear
-        self.tableView.layer.cornerRadius = 10
-        self.tableView.layer.masksToBounds = true
-        self.tableView.register(TodoTableViewCell.self, forCellReuseIdentifier: cellId)
-        self.tableView.translatesAutoresizingMaskIntoConstraints = false
+        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layout.sectionInset = UIEdgeInsets(top: 20, left: 10, bottom: 10, right: 10)
+        layout.itemSize = CGSize(width: 90, height: 120)
+        
+        self.collectionView = UICollectionView(frame: view.frame, collectionViewLayout: layout)
+        self.collectionView.translatesAutoresizingMaskIntoConstraints = false
+        self.collectionView.delegate = self
+        self.collectionView.dataSource = self
+        self.collectionView.backgroundColor = .clear
+        self.collectionView.collectionViewLayout = layout
+        self.collectionView.layer.cornerRadius = 10
+        self.collectionView.layer.masksToBounds = true
+        self.collectionView.register(TodoCollectionViewCell.self, forCellWithReuseIdentifier: cellId)
+        self.view.addSubview(collectionView)
         
         self.view.addContraintsWithFormat(format: "H:|[v0]|", views: bgView)
         self.view.addContraintsWithFormat(format: "V:|[v0]|", views: bgView)
         self.view.addContraintsWithFormat(format: "H:|[v0]|", views: blurEffectView)
         self.view.addContraintsWithFormat(format: "V:|[v0]|", views: blurEffectView)
-        self.view.addContraintsWithFormat(format: "H:|-25-[v0]-25-|", views: tableView)
-        self.view.addContraintsWithFormat(format: "V:|-35-[v0]-35-|", views: tableView)
+        self.view.addContraintsWithFormat(format: "H:|-25-[v0]-25-|", views: collectionView)
+        self.view.addContraintsWithFormat(format: "V:|-35-[v0]-35-|", views: collectionView)
         
         
     }
@@ -80,22 +87,22 @@ class TodoTableViewController: UIViewController, NewTodoTableViewControllerProto
     }
     
     
-    func checkmarkTapped(sender: TodoTableViewCell) {
-        if let indexPath = tableView.indexPath(for: sender) {
+    func checkmarkTapped(sender: TodoCollectionViewCell) {
+        if let indexPath = collectionView.indexPath(for: sender) {
             let todo = todos[indexPath.row]
             todo.isComplete = !todo.isComplete
             todos[indexPath.row] = todo
-            tableView.reloadRows(at: [indexPath], with: .automatic)
+            collectionView.reloadItems(at: [indexPath])
         }
         updateTaskCount()
         Todo.saveTodos(todos)
-        tableView.reloadData()
+        collectionView.reloadData()
     }
     
     func addTodo(todo: Todo) {
         self.todos.append(todo)
         Todo.saveTodos(todos)
-        tableView.reloadData()
+        collectionView.reloadData()
     }
     
     func updateTaskCount() {
@@ -110,68 +117,38 @@ class TodoTableViewController: UIViewController, NewTodoTableViewControllerProto
 }
 
 
-extension TodoTableViewController: UITableViewDelegate, UITableViewDataSource {
+extension TodoTableViewController:  UICollectionViewDelegate,UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     //MARK: Tableview delegate and datasource
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
+   
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: 100)
     }
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return todos.count
     }
     
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 60))
-        headerView.backgroundColor = UIColor(rgb: 0xfd8208)
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! TodoCollectionViewCell
         
-        let taskNumOfFinishedLabel = UILabel(fontSize: 20)
-        taskNumOfFinishedLabel.textAlignment = .left
-        taskNumOfFinishedLabel.textColor = .black
-        
-        let taskTodoLabel = UILabel(fontSize: 20)
-        taskTodoLabel.textAlignment = .left
-        taskTodoLabel.textColor = .black
-        
-        headerView.addSubview(taskTodoLabel)
-        headerView.addSubview(taskNumOfFinishedLabel)
-        
-        headerView.addContraintsWithFormat(format: "H:|-5-[v0]-15-[v1]", views: taskNumOfFinishedLabel,taskTodoLabel)
-        headerView.addContraintsWithFormat(format: "V:|[v0]|", views: taskNumOfFinishedLabel)
-        headerView.addContraintsWithFormat(format: "V:|[v0]|", views: taskTodoLabel)
-        
-        
-        switch section {
-        case 0:
-            taskNumOfFinishedLabel.text = "Completed: \(numOfTaskDone)"
-            taskTodoLabel.text = "Tasks: \(todos.count)"
-            return headerView
-        default: return headerView
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! TodoTableViewCell
-        cell.selectionStyle = .none
-        cell.backgroundColor = .white
+        cell.layer.cornerRadius = 10
+        cell.layer.masksToBounds = true
+        cell.backgroundColor = .gray
         
         // Create a todo object for each object in array
         let todo = todos[indexPath.row]
-        
+
         // Set labels
         cell.titleLabel.text = todo.title
         cell.notesLabel.text = todo.notes!
         cell.completedButton.isSelected = todo.isComplete
-        
+
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .full
         dateFormatter.dateFormat = "MM/dd/yy h:mm a"
-        
+
         cell.dueDateLabel.text = "Due: \(dateFormatter.string(from: todo.dueDate))"
-        
+
         cell.completedButton.tintColor = UIColor(rgb: 0xfd8208)
         cell.delegate = self
         if cell.completedButton.isSelected{
@@ -184,20 +161,20 @@ extension TodoTableViewController: UITableViewDelegate, UITableViewDataSource {
         }
         return cell
     }
-    
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            todos.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
-            updateTaskCount()
-            tableView.reloadData()
-            Todo.saveTodos(todos)
-        }
-    }
+
+//    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+//        return true
+//    }
+//
+//    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+//        if editingStyle == .delete {
+//            todos.remove(at: indexPath.row)
+//            tableView.deleteRows(at: [indexPath], with: .fade)
+//            updateTaskCount()
+//            tableView.reloadData()
+//            Todo.saveTodos(todos)
+//        }
+//    }
 }
 
 

@@ -16,6 +16,7 @@
 		219261C91FEC71B300F09045 /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219261C81FEC71B300F09045 /* Todo.swift */; };
 		219261CB1FEC740000F09045 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219261CA1FEC740000F09045 /* Extensions.swift */; };
 		219261CE1FEC90F500F09045 /* NewTodoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219261CD1FEC90F500F09045 /* NewTodoTableViewController.swift */; };
+		21B6A1351FF2CE00001185C9 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B6A1341FF2CE00001185C9 /* HeaderView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		219261C81FEC71B300F09045 /* Todo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Todo.swift; sourceTree = "<group>"; };
 		219261CA1FEC740000F09045 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		219261CD1FEC90F500F09045 /* NewTodoTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTodoTableViewController.swift; sourceTree = "<group>"; };
+		21B6A1341FF2CE00001185C9 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +67,7 @@
 				2133A9E51FF1A26A0092D6CA /* todos.plist */,
 				219261B21FEC6E5A00F09045 /* AppDelegate.swift */,
 				219261C81FEC71B300F09045 /* Todo.swift */,
+				21B6A1341FF2CE00001185C9 /* HeaderView.swift */,
 				219261CA1FEC740000F09045 /* Extensions.swift */,
 				219261C41FEC713F00F09045 /* Cells */,
 				219261CC1FEC90BD00F09045 /* View Controller */,
@@ -170,6 +173,7 @@
 				219261B51FEC6E5A00F09045 /* TodoListViewController.swift in Sources */,
 				219261B31FEC6E5A00F09045 /* AppDelegate.swift in Sources */,
 				219261C61FEC716200F09045 /* TodoListTableViewCell.swift in Sources */,
+				21B6A1351FF2CE00001185C9 /* HeaderView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

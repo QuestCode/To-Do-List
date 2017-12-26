@@ -17,13 +17,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         let navigationController = UINavigationController(rootViewController: TodoTableViewController())
-        navigationController.navigationBar.tintColor = UIColor(rgb: 0xfd8208)
-        navigationController.navigationBar.barTintColor = .gray
+        navigationController.navigationBar.tintColor = .white
+        navigationController.navigationBar.barTintColor = UIColor(rgb: 0x3ECEFF)
         navigationController.navigationBar.barStyle = .blackTranslucent
         
         // For Bar Title
         let attr = [
-            NSAttributedStringKey.foregroundColor: UIColor(rgb: 0xfd8208),
+            NSAttributedStringKey.foregroundColor: UIColor.white,
             NSAttributedStringKey.font : UIFont(name: "AppleSDGothicNeo-Regular", size: 20)!
         ]
         navigationController.navigationBar.titleTextAttributes = attr
