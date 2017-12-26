@@ -9,7 +9,10 @@
 import UIKit
 
 @objc protocol TodoTableViewCellProtocol {
-    func checkmarkTapped(sender: TodoCollectionViewCell)
+    func moreButtonTapped(sender: TodoCollectionViewCell)
+    func completeButtonTapped(sender: TodoCollectionViewCell)
+    func deleteButtonTapped(sender: TodoCollectionViewCell)
+    func editButtonTapped(sender: TodoCollectionViewCell)
 }
 
 
@@ -17,9 +20,34 @@ class TodoCollectionViewCell: UICollectionViewCell {
     
     var delegate: TodoTableViewCellProtocol?
     
+    @objc let moreButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.tintColor = UIColor(rgb: 0x3ECEFF)
+        return button
+    }()
+    
+    @objc let deleteButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.tintColor = UIColor(rgb: 0x3ECEFF)
+        button.alpha = 0
+        return button
+    }()
+    
+    @objc let editButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.tintColor = UIColor(rgb: 0x3ECEFF)
+        button.alpha = 0
+        return button
+    }()
+    
     @objc let completedButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.tintColor = UIColor(rgb: 0x3ECEFF)
+        button.alpha = 0
         return button
     }()
     
@@ -35,7 +63,7 @@ class TodoCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    let dueDateLabel: UILabel = {
+    let createdDateLabel: UILabel = {
         let label = UILabel(fontSize: 14)
         label.textColor = .lightGray
         label.textAlignment = .right
@@ -63,26 +91,64 @@ class TodoCollectionViewCell: UICollectionViewCell {
     
     func setupViews() {
         addSubview(titleLabel)
-        addSubview(completedButton)
-        addSubview(dueDateLabel)
+        addSubview(moreButton)
+        addSubview(createdDateLabel)
         addSubview(selectionView)
+        addSubview(completedButton)
+        addSubview(deleteButton)
+        addSubview(editButton)
         
-        completedButton.addTarget(self, action: #selector(completedButtonTapped(button:)), for: .touchUpInside)
+        moreButton.addTarget(self, action: #selector(moreButtonTapped(_:)), for: .touchUpInside)
+        completedButton.addTarget(self, action: #selector(completeButtonTapped(_:)), for: .touchUpInside)
+        editButton.addTarget(self, action: #selector(editButtonTapped(_:)), for: .touchUpInside)
+        deleteButton.addTarget(self, action: #selector(deleteButtonTapped(_:)), for: .touchUpInside)
+        
+        let moreImage = UIImage(named: "more")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        let checkImage = UIImage(named: "check")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        let editImage = UIImage(named: "edit")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        let deleteImage = UIImage(named: "delete")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        
+        moreButton.setImage(moreImage, for: .normal)
+        completedButton.setImage(checkImage, for: .normal)
+        editButton.setImage(editImage, for: .normal)
+        deleteButton.setImage(deleteImage, for: .normal)
         
         addContraintsWithFormat(format: "H:|[v0(5)]", views: selectionView)
         addContraintsWithFormat(format: "V:|[v0]|", views: selectionView)
         addContraintsWithFormat(format: "H:|-10-[v0]", views: titleLabel)
-        addContraintsWithFormat(format: "V:|-10-[v0]-5-[v1]", views: dueDateLabel,titleLabel)
-        addContraintsWithFormat(format: "V:|-35-[v0(30)]", views: completedButton)
-        addContraintsWithFormat(format: "H:[v0(30)]-10-|", views:completedButton)
+        addContraintsWithFormat(format: "V:|-10-[v0]-5-[v1]", views: createdDateLabel,titleLabel)
+        addContraintsWithFormat(format: "V:|-45-[v0(20)]", views: moreButton)
+        addContraintsWithFormat(format: "H:[v0(20)]-20-|", views: moreButton)
         
-        addContraintsWithFormat(format: "H:|-10-[v0]", views: dueDateLabel)
+        addContraintsWithFormat(format: "V:|-5-[v0(20)]", views: completedButton)
+        addContraintsWithFormat(format: "H:[v0(20)]-20-|", views: completedButton)
+        
+        addContraintsWithFormat(format: "V:|-45-[v0(20)]", views: editButton)
+        addContraintsWithFormat(format: "H:[v0(20)]-70-|", views: editButton)
+        
+        addContraintsWithFormat(format: "V:[v0(20)]-5-|", views: deleteButton)
+        addContraintsWithFormat(format: "H:[v0(20)]-20-|", views: deleteButton)
+        
+        
+        
+        addContraintsWithFormat(format: "H:|-10-[v0]", views: createdDateLabel)
     }
     
     
-    @objc func completedButtonTapped(button: UIButton) {
-        delegate?.checkmarkTapped(sender: self)
+    @objc func moreButtonTapped(_: UIButton) {
+        delegate?.moreButtonTapped(sender: self)
     }
     
+    @objc func completeButtonTapped(_: UIButton) {
+        delegate?.completeButtonTapped(sender: self)
+    }
+    
+    @objc func deleteButtonTapped(_: UIButton) {
+        delegate?.deleteButtonTapped(sender: self)
+    }
+    
+    @objc func editButtonTapped(_: UIButton) {
+        delegate?.editButtonTapped(sender: self)
+    }
 
 }

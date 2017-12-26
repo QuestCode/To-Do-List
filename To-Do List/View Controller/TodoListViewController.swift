@@ -9,7 +9,6 @@
 import UIKit
 
 class TodoTableViewController: UIViewController, NewTodoTableViewControllerProtocol, TodoTableViewCellProtocol {
-    
 
     let cellId = "todoCell"
     var todos = [Todo]()
@@ -85,8 +84,8 @@ class TodoTableViewController: UIViewController, NewTodoTableViewControllerProto
         self.navigationController?.pushViewController(dvc, animated: true)
     }
     
-    
-    func checkmarkTapped(sender: TodoCollectionViewCell) {
+    // MARK: Protocol Functions
+    func completeButtonTapped(sender: TodoCollectionViewCell) {
         if let indexPath = collectionView.indexPath(for: sender) {
             let todo = todos[indexPath.row]
             todo.isComplete = !todo.isComplete
@@ -96,6 +95,47 @@ class TodoTableViewController: UIViewController, NewTodoTableViewControllerProto
         updateTaskCount()
         Todo.saveTodos(todos)
         collectionView.reloadData()
+    }
+    
+    func moreButtonTapped(sender: TodoCollectionViewCell) {
+        let completeCenter = sender.completedButton.center
+        let editCenter = sender.editButton.center
+        let deleteCenter = sender.deleteButton.center
+        let moreCenter = sender.moreButton.center
+        
+        let moreImage = UIImage(named: "more")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        if sender.moreButton.currentImage == moreImage {
+            let circleImage = UIImage(named: "circle")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+            sender.moreButton.setImage(circleImage, for: .normal)
+            sender.completedButton.alpha = 1
+            sender.editButton.alpha = 1
+            sender.deleteButton.alpha = 1
+            sender.completedButton.center = completeCenter
+            sender.editButton.center = editCenter
+            sender.deleteButton.center = deleteCenter
+        } else {
+            sender.moreButton.setImage(moreImage, for: .normal)
+            sender.completedButton.alpha = 0
+            sender.editButton.alpha = 0
+            sender.deleteButton.alpha = 0
+            sender.completedButton.center = moreCenter
+            sender.editButton.center = moreCenter
+            sender.deleteButton.center = moreCenter
+        }
+    }
+    
+    func deleteButtonTapped(sender: TodoCollectionViewCell) {
+        if let indexPath = collectionView.indexPath(for: sender) {
+            todos.remove(at: indexPath.row)
+            collectionView.deleteItems(at: [indexPath])
+            updateTaskCount()
+            collectionView.reloadData()
+            Todo.saveTodos(todos)
+        }
+    }
+    
+    func editButtonTapped(sender: TodoCollectionViewCell) {
+        print("edot")
     }
     
     func addTodo(todo: Todo) {
@@ -146,39 +186,23 @@ extension TodoTableViewController:  UICollectionViewDelegate,UICollectionViewDat
         dateFormatter.dateStyle = .full
         dateFormatter.dateFormat = "MM/dd/yy h:mm a"
 
-        cell.dueDateLabel.text = "Due: \(dateFormatter.string(from: todo.dueDate))"
+        cell.createdDateLabel.text = "Created: \(dateFormatter.string(from: todo.dueDate))"
 
-        cell.completedButton.tintColor = UIColor(rgb: 0x3ECEFF)
         cell.delegate = self
-        if cell.completedButton.isSelected{
+        
+        let image = UIImage(named: "check")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        
+        if todo.isComplete{
             // Have to render image to change color of image
-            let image = UIImage(named: "check_on")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+            cell.selectionView.backgroundColor = UIColor(rgb: 0x3ECEFF)
+            cell.completedButton.tintColor = .red
             cell.completedButton.setImage(image, for: .normal)
         } else {
-            let image = UIImage(named: "check_off")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+            cell.selectionView.backgroundColor = .white
             cell.completedButton.setImage(image, for: .normal)
         }
         return cell
     }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as! TodoCollectionViewCell
-        cell.selectionView.backgroundColor = UIColor(rgb: 0x3ECEFF)
-    }
-
-//    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-//        return true
-//    }
-//
-//    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-//        if editingStyle == .delete {
-//            todos.remove(at: indexPath.row)
-//            tableView.deleteRows(at: [indexPath], with: .fade)
-//            updateTaskCount()
-//            tableView.reloadData()
-//            Todo.saveTodos(todos)
-//        }
-//    }
 }
 
 
