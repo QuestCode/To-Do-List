@@ -8,12 +8,14 @@
 
 import UIKit
 
-class TodoTableViewController: UITableViewController, NewTodoTableViewControllerProtocol, TodoTableViewCellProtocol {
+class TodoTableViewController: UIViewController, NewTodoTableViewControllerProtocol, TodoTableViewCellProtocol {
     
 
     let cellId = "todoCell"
     var todos = [Todo]()
     var numOfTaskDone = 0
+    
+    let tableView = UITableView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,17 +29,48 @@ class TodoTableViewController: UITableViewController, NewTodoTableViewController
             print("found")
         } else {
             todos = Todo.loadSampleTodos()
-            todos[0].isComplete = true
         }
         updateTaskCount()
-        self.tableView.backgroundColor = .white
-        self.tableView.separatorColor = .clear
-        self.tableView.register(TodoTableViewCell.self, forCellReuseIdentifier: cellId)
+        setupView()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    // MARK: Setup
+    private func setupView() {
+        
+        // This is to remove view underneath navigation bar
+        self.navigationController?.navigationBar.isTranslucent = false
+        
+        let bgView = UIImageView(image: UIImage(named: "bolder_bg"))
+        bgView.translatesAutoresizingMaskIntoConstraints = false
+        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.dark)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.translatesAutoresizingMaskIntoConstraints = false
+        blurEffectView.alpha = 0.7
+        
+        self.view.addSubview(bgView)
+        self.view.addSubview(blurEffectView)
+        self.view.addSubview(tableView)
+        
+//        self.tableView.backgroundColor = .white
+        self.tableView.separatorColor = .clear
+        self.tableView.layer.cornerRadius = 10
+        self.tableView.layer.masksToBounds = true
+        self.tableView.register(TodoTableViewCell.self, forCellReuseIdentifier: cellId)
+        self.tableView.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.view.addContraintsWithFormat(format: "H:|[v0]|", views: bgView)
+        self.view.addContraintsWithFormat(format: "V:|[v0]|", views: bgView)
+        self.view.addContraintsWithFormat(format: "H:|[v0]|", views: blurEffectView)
+        self.view.addContraintsWithFormat(format: "V:|[v0]|", views: blurEffectView)
+        self.view.addContraintsWithFormat(format: "H:|-25-[v0]-25-|", views: tableView)
+        self.view.addContraintsWithFormat(format: "V:|-35-[v0]-35-|", views: tableView)
+        
+        
     }
     
     @objc func addNewTodo(_: UIBarButtonItem){
@@ -74,20 +107,24 @@ class TodoTableViewController: UITableViewController, NewTodoTableViewController
         }
     }
     
+}
+
+
+extension TodoTableViewController: UITableViewDelegate, UITableViewDataSource {
     //MARK: Tableview delegate and datasource
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
-
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return todos.count
     }
     
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 60))
         headerView.backgroundColor = UIColor(rgb: 0xfd8208)
         
@@ -109,7 +146,6 @@ class TodoTableViewController: UITableViewController, NewTodoTableViewController
         
         switch section {
         case 0:
-//            Uncomment below to add images
             taskNumOfFinishedLabel.text = "Completed: \(numOfTaskDone)"
             taskTodoLabel.text = "Tasks: \(todos.count)"
             return headerView
@@ -117,7 +153,7 @@ class TodoTableViewController: UITableViewController, NewTodoTableViewController
         }
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! TodoTableViewCell
         cell.selectionStyle = .none
         cell.backgroundColor = .white
@@ -125,7 +161,7 @@ class TodoTableViewController: UITableViewController, NewTodoTableViewController
         // Create a todo object for each object in array
         let todo = todos[indexPath.row]
         
-        // Set labels 
+        // Set labels
         cell.titleLabel.text = todo.title
         cell.notesLabel.text = todo.notes!
         cell.completedButton.isSelected = todo.isComplete
@@ -149,11 +185,11 @@ class TodoTableViewController: UITableViewController, NewTodoTableViewController
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             todos.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
