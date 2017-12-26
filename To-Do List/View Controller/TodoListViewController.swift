@@ -56,7 +56,6 @@ class TodoTableViewController: UIViewController, NewTodoTableViewControllerProto
         self.view.addSubview(blurEffectView)
         
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 20, left: 10, bottom: 10, right: 10)
         layout.itemSize = CGSize(width: 90, height: 120)
         
         self.collectionView = UICollectionView(frame: view.frame, collectionViewLayout: layout)
@@ -133,7 +132,7 @@ extension TodoTableViewController:  UICollectionViewDelegate,UICollectionViewDat
         
         cell.layer.cornerRadius = 10
         cell.layer.masksToBounds = true
-        cell.backgroundColor = .gray
+        cell.backgroundColor = .white
         
         // Create a todo object for each object in array
         let todo = todos[indexPath.row]
@@ -149,7 +148,7 @@ extension TodoTableViewController:  UICollectionViewDelegate,UICollectionViewDat
 
         cell.dueDateLabel.text = "Due: \(dateFormatter.string(from: todo.dueDate))"
 
-        cell.completedButton.tintColor = UIColor(rgb: 0xfd8208)
+        cell.completedButton.tintColor = UIColor(rgb: 0x3ECEFF)
         cell.delegate = self
         if cell.completedButton.isSelected{
             // Have to render image to change color of image
@@ -160,6 +159,11 @@ extension TodoTableViewController:  UICollectionViewDelegate,UICollectionViewDat
             cell.completedButton.setImage(image, for: .normal)
         }
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let cell = collectionView.cellForItem(at: indexPath) as! TodoCollectionViewCell
+        cell.selectionView.backgroundColor = UIColor(rgb: 0x3ECEFF)
     }
 
 //    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

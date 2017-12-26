@@ -37,6 +37,7 @@ class TodoCollectionViewCell: UICollectionViewCell {
     
     let dueDateLabel: UILabel = {
         let label = UILabel(fontSize: 14)
+        label.textColor = .lightGray
         label.textAlignment = .right
         return label
     }()
