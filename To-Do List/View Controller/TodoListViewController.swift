@@ -28,7 +28,6 @@ class TodoTableViewController: UITableViewController, NewTodoTableViewController
         } else {
             todos = Todo.loadSampleTodos()
             todos[0].isComplete = true
-            Todo.saveTodos(todos)
         }
         updateTaskCount()
         self.tableView.backgroundColor = .white

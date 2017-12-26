@@ -21,12 +21,16 @@ class Todo: Codable {
     }
     
     static let DocumentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-    static let archiveURL = DocumentsDirectory.appendingPathComponent("todos").appendingPathComponent("plist")
+    static let archiveURL = DocumentsDirectory.appendingPathComponent("todos.plist")
     
     static func saveTodos(_ todos: [Todo]) {
         let propertyListEncoder = PropertyListEncoder()
-        let codedTodos = try? propertyListEncoder.encode(todos)
-        try? codedTodos?.write(to: archiveURL, options: .noFileProtection)
+        do {
+            let codedTodos = try? propertyListEncoder.encode(todos)
+            try codedTodos?.write(to: archiveURL, options: .noFileProtection)
+        } catch {
+            print("Writing file failed with error : \(error)")
+        }
     }
     
     static func loadTodos() -> [Todo]? {
