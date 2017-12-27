@@ -289,14 +289,14 @@ extension TodoViewController:  UITableViewDelegate,UITableViewDataSource {
         
         cell.createdDateLabel.text = "Due: \(dateFormatter.string(from: todo.dueDate))"
         
-        cell.selectionView.isHidden = !todo.isComplete ? true : false
+        cell.checkView.isHidden = !todo.isComplete ? true : false
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let cell = tableView.cellForRow(at: indexPath) as! TodoTableViewCell
-        let completedAction = UIContextualAction(style: .normal, title: cell.selectionView.isHidden ? "Check" : "Uncheck") { (action, view, _) in
+        let completedAction = UIContextualAction(style: .normal, title: cell.checkView.isHidden ? "Check" : "Uncheck") { (action, view, _) in
             self.completeButtonTapped(sender: cell)
         }
         completedAction.backgroundColor = UIColor(rgb: 0x7ABA7A)
@@ -309,6 +309,11 @@ extension TodoViewController:  UITableViewDelegate,UITableViewDataSource {
             self.deleteButtonTapped(sender: cell)
         }
         return UISwipeActionsConfiguration(actions: [deleteAction])
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath) as! TodoTableViewCell
+        self.editButtonTapped(sender: cell)
     }
 }
 

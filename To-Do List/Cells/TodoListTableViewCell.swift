@@ -11,11 +11,12 @@ import UIKit
 
 class TodoTableViewCell: UITableViewCell {
     
-    let selectionView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor(rgb: 0x3ECEFF)
-        return view
+    var checkView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.translatesAutoresizingMaskIntoConstraints = false
+        imgView.tintColor = UIColor(rgb: 0xA47AF4)
+        imgView.image = UIImage(named: "check")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        return imgView
     }()
     
     let titleLabel: UILabel = {
@@ -52,10 +53,10 @@ class TodoTableViewCell: UITableViewCell {
     func setupViews() {
         addSubview(titleLabel)
         addSubview(createdDateLabel)
-        addSubview(selectionView)
+        addSubview(checkView)
         
-        addContraintsWithFormat(format: "H:|[v0(5)]", views: selectionView)
-        addContraintsWithFormat(format: "V:|[v0]|", views: selectionView)
+        addContraintsWithFormat(format: "H:[v0(20)]-30-|", views: checkView)
+        addContraintsWithFormat(format: "V:|-45-[v0(20)]", views: checkView)
         addContraintsWithFormat(format: "H:|-10-[v0]", views: titleLabel)
         addContraintsWithFormat(format: "V:|-10-[v0]-5-[v1]", views: createdDateLabel,titleLabel)
         addContraintsWithFormat(format: "H:|-10-[v0]", views: createdDateLabel)
