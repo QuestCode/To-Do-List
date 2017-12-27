@@ -16,20 +16,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
-        let navigationController = UINavigationController(rootViewController: TodoTableViewController())
-        navigationController.navigationBar.tintColor = .white
-        navigationController.navigationBar.barTintColor = UIColor(rgb: 0xA47AF4)
-        navigationController.navigationBar.barStyle = .blackTranslucent
-        
-        // For Bar Title
-        let attr = [
-            NSAttributedStringKey.foregroundColor: UIColor.white,
-            NSAttributedStringKey.font : UIFont(name: "AppleSDGothicNeo-Regular", size: 20)!
-        ]
-        navigationController.navigationBar.titleTextAttributes = attr
+//        let navigationController = UINavigationController(rootViewController: TodoTableViewController())
+//        navigationController.navigationBar.tintColor = .white
+//        navigationController.navigationBar.barTintColor = UIColor(rgb: 0xA47AF4)
+//        navigationController.navigationBar.barStyle = .blackTranslucent
+//
+//        // For Bar Title
+//        let attr = [
+//            NSAttributedStringKey.foregroundColor: UIColor.white,
+//            NSAttributedStringKey.font : UIFont(name: "AppleSDGothicNeo-Regular", size: 20)!
+//        ]
+//        navigationController.navigationBar.titleTextAttributes = attr
         
         self.window = UIWindow(frame: UIScreen.main.bounds)
-        self.window?.rootViewController = navigationController
+        self.window?.rootViewController = TodoViewController()
         self.window?.makeKeyAndVisible()
         
         return true

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TodoTableViewController: UIViewController, NewTodoTableViewControllerProtocol, TodoTableViewCellProtocol {
+class TodoViewController: UIViewController, NewTodoTableViewControllerProtocol, TodoTableViewCellProtocol {
 
     let cellIdForTableView = "todoCell"
     var todos = [Todo]()
@@ -25,6 +25,15 @@ class TodoTableViewController: UIViewController, NewTodoTableViewControllerProto
     var calendarView: JTAppleCalendarView!
     let cellIdForCalendar = "id"
     let formatter = DateFormatter()
+    
+    let addNewTask: UIButton = {
+        let btn = UIButton()
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.tintColor = .white
+        let image = UIImage(named: "plus")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        btn.setImage(image, for: .normal)
+        return btn
+    }()
     
     let monthLabel:  UILabel = {
         let lbl = UILabel()
@@ -54,9 +63,9 @@ class TodoTableViewController: UIViewController, NewTodoTableViewControllerProto
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = "To-Do List"
-        
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewTodo(_:)))
+//        self.title = "To-Do List"
+        // This is to remove view underneath navigation bar
+//        self.navigationController?.navigationBar.isTranslucent = false
         
         if let savedTodos = Todo.loadTodos() {
             todos = savedTodos
@@ -76,8 +85,7 @@ class TodoTableViewController: UIViewController, NewTodoTableViewControllerProto
     // MARK: Setup
     private func setupTableView() {
         
-        // This is to remove view underneath navigation bar
-        self.navigationController?.navigationBar.isTranslucent = false
+        self.addNewTask.addTarget(self, action: #selector(addNewTodo(_:)), for: .touchUpInside)
         
         self.tableView = UITableView()
         self.tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -94,6 +102,7 @@ class TodoTableViewController: UIViewController, NewTodoTableViewControllerProto
         
         // Setup up calendarView
         self.calendarView = JTAppleCalendarView()
+        self.view.addSubview(calendarView)
         self.calendarView.scrollDirection = .horizontal
         self.calendarView.showsHorizontalScrollIndicator = false
         self.calendarView.isScrollEnabled = true
@@ -105,9 +114,11 @@ class TodoTableViewController: UIViewController, NewTodoTableViewControllerProto
         self.calendarView.translatesAutoresizingMaskIntoConstraints = false
         self.calendarView.backgroundColor = .clear
         self.calendarView.register(CustomCalendarCell.self, forCellWithReuseIdentifier: cellIdForCalendar)
-        self.view.addSubview(calendarView)
+        self.calendarView.scrollToDate(Date(),animateScroll: false)
+        self.calendarView.selectDates([ Date() ])
         self.view.addSubview(monthLabel)
         self.view.addSubview(yearLabel)
+        self.view.addSubview(addNewTask)
         
         // This is used to labels to present the months and year
         self.calendarView.visibleDates() { (visibleDates) in
@@ -123,58 +134,19 @@ class TodoTableViewController: UIViewController, NewTodoTableViewControllerProto
         setupDaysView()
         
         self.view.addContraintsWithFormat(format: "H:|[v0]|", views: calendarView)
-        self.view.addContraintsWithFormat(format: "V:|-25-[v0]-15-[v1]-10-[v2][v3(240)][v4]|", views: yearLabel,monthLabel,dayView,calendarView,tableView)
+        self.view.addContraintsWithFormat(format: "V:|-40-[v0]-15-[v1]-10-[v2][v3(240)][v4]|", views: yearLabel,monthLabel,dayView,calendarView,tableView)
         self.view.addContraintsWithFormat(format: "H:|[v0]|", views: dayView)
         self.view.addContraintsWithFormat(format: "H:|-20-[v0]", views: monthLabel)
         self.view.addContraintsWithFormat(format: "H:|-20-[v0]", views: yearLabel)
         
         self.view.addContraintsWithFormat(format: "H:|[v0]|", views: tableView)
+        self.view.addContraintsWithFormat(format: "H:[v0(30)]-20-|", views: addNewTask)
+        self.view.addContraintsWithFormat(format: "V:|-40-[v0(30)]", views: addNewTask)
         
         
     }
     
-    // MARK: Setup
-    private func setupCalendarView() {
-        self.view.backgroundColor = backgroundColor
-        
-        
-        // Setup up calendarView
-        self.calendarView = JTAppleCalendarView()
-        self.calendarView.scrollDirection = .horizontal
-        self.calendarView.showsHorizontalScrollIndicator = false
-        self.calendarView.isScrollEnabled = true
-        self.calendarView.isPagingEnabled = true
-        self.calendarView.minimumLineSpacing = 0
-        self.calendarView.minimumInteritemSpacing = 0
-        self.calendarView.calendarDelegate = self
-        self.calendarView.calendarDataSource = self
-        self.calendarView.translatesAutoresizingMaskIntoConstraints = false
-        self.calendarView.backgroundColor = .clear
-        self.calendarView.register(CustomCalendarCell.self, forCellWithReuseIdentifier: cellIdForCalendar)
-        self.view.addSubview(calendarView)
-        self.view.addSubview(monthLabel)
-        self.view.addSubview(yearLabel)
-        
-        // This is used to labels to present the months and year
-        self.calendarView.visibleDates() { (visibleDates) in
-            let date = visibleDates.monthDates.first!.date
-            
-            self.formatter.dateFormat = "MMMM"
-            self.monthLabel.text = self.formatter.string(from: date)
-            
-            self.formatter.dateFormat = "yyyy"
-            self.yearLabel.text = self.formatter.string(from: date)
-        }
-        
-        setupDaysView()
-        
-        self.view.addContraintsWithFormat(format: "H:|[v0]|", views: calendarView)
-        self.view.addContraintsWithFormat(format: "V:|-55-[v0]-15-[v1]-10-[v2][v3(240)]", views: yearLabel,monthLabel,dayView,calendarView)
-        self.view.addContraintsWithFormat(format: "H:|[v0]|", views: dayView)
-        self.view.addContraintsWithFormat(format: "H:|-20-[v0]", views: monthLabel)
-        self.view.addContraintsWithFormat(format: "H:|-20-[v0]", views: yearLabel)
-        
-    }
+    
     
     private func setupDaysView() {
         self.view.addSubview(dayView)
@@ -201,28 +173,34 @@ class TodoTableViewController: UIViewController, NewTodoTableViewControllerProto
         
     }
     
-    func handleTextColor(view:JTAppleCell?,cellState: CellState) {
-        guard let validCell = view as? CustomCalendarCell else { return }
+    func configureCell(cell: JTAppleCell?, cellState: CellState) {
+        guard let customCell = cell as? CustomCalendarCell else { return }
         
-        if cellState.isSelected {
-            validCell.dateLabel.textColor = selectedTextColor
-        } else {
-            if cellState.dateBelongsTo == .thisMonth {
-                validCell.dateLabel.textColor = insideTextColor
-            } else {
-                validCell.dateLabel.textColor = outsideTextColor
-            }
-        }
+        handleCellSelectedColor(cell: customCell, cellState: cellState)
+        handleTextColor(cell: customCell, cellState: cellState)
     }
     
-    func handleCellSelectedColor(view: JTAppleCell?) {
-        guard let validCell = view as? CustomCalendarCell else { return }
+    func handleTextColor(cell:CustomCalendarCell,cellState: CellState) {
         
-        if validCell.isSelected {
-            validCell.selectedView.isHidden = false
+        let todayDate = Date()
+        formatter.dateFormat = "MM dd yyyy"
+        let todatDateString = formatter.string(from: todayDate)
+        let monthDateString = formatter.string(from: cellState.date)
+        
+        if todatDateString == monthDateString {
+            cell.dateLabel.textColor = .red
         } else {
-            validCell.selectedView.isHidden = true
+            handleCalendarCellColor(cell: cell, cellState: cellState)
         }
+
+    }
+    
+    func handleCalendarCellColor(cell: CustomCalendarCell, cellState: CellState) {
+        cell.dateLabel.textColor = cellState.dateBelongsTo == .thisMonth ? insideTextColor : outsideTextColor
+    }
+    
+    func handleCellSelectedColor(cell: CustomCalendarCell, cellState: CellState) {
+        cell.selectedView.isHidden = cellState.isSelected ? false : true
     }
     
     
@@ -309,7 +287,7 @@ class TodoTableViewController: UIViewController, NewTodoTableViewControllerProto
 
 //MARK: Tableview delegate and datasource
 
-extension TodoTableViewController:  UITableViewDelegate,UITableViewDataSource {
+extension TodoViewController:  UITableViewDelegate,UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 120
@@ -336,7 +314,7 @@ extension TodoTableViewController:  UITableViewDelegate,UITableViewDataSource {
         dateFormatter.dateStyle = .full
         dateFormatter.dateFormat = "MM/dd/yy h:mm a"
         
-        cell.createdDateLabel.text = "Created: \(dateFormatter.string(from: todo.dueDate))"
+        cell.createdDateLabel.text = "Due: \(dateFormatter.string(from: todo.dueDate))"
         
         cell.delegate = self
         
@@ -356,7 +334,7 @@ extension TodoTableViewController:  UITableViewDelegate,UITableViewDataSource {
 }
 
 
-extension TodoTableViewController: JTAppleCalendarViewDelegate, JTAppleCalendarViewDataSource {
+extension TodoViewController: JTAppleCalendarViewDelegate, JTAppleCalendarViewDataSource {
     func calendar(_ calendar: JTAppleCalendarView, willDisplay cell: JTAppleCell, forItemAt date: Date, cellState: CellState, indexPath: IndexPath) {
     }
     
@@ -364,8 +342,7 @@ extension TodoTableViewController: JTAppleCalendarViewDelegate, JTAppleCalendarV
     func calendar(_ calendar: JTAppleCalendarView, cellForItemAt date: Date, cellState: CellState, indexPath: IndexPath) -> JTAppleCell {
         let cell = calendar.dequeueReusableJTAppleCell(withReuseIdentifier: cellIdForCalendar, for: indexPath) as! CustomCalendarCell
         cell.dateLabel.text = cellState.text
-        handleCellSelectedColor(view: cell)
-        handleTextColor(view: cell, cellState: cellState)
+        configureCell(cell: cell, cellState: cellState)
         return cell
     }
     
@@ -374,7 +351,7 @@ extension TodoTableViewController: JTAppleCalendarViewDelegate, JTAppleCalendarV
         formatter.timeZone = Calendar.current.timeZone
         formatter.locale = Calendar.current.locale
         
-        let startDate = formatter.date(from: "01 01 2018")
+        let startDate = formatter.date(from: "01 01 1900")
         let endDate = formatter.date(from: "01 01 2019")
         
         return ConfigurationParameters(startDate: startDate!, endDate: endDate!)
@@ -391,13 +368,11 @@ extension TodoTableViewController: JTAppleCalendarViewDelegate, JTAppleCalendarV
     }
     
     func calendar(_ calendar: JTAppleCalendarView, didSelectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
-        handleCellSelectedColor(view: cell)
-        handleTextColor(view: cell, cellState: cellState)
+        configureCell(cell: cell, cellState: cellState)
     }
     
     func calendar(_ calendar: JTAppleCalendarView, didDeselectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
-        handleCellSelectedColor(view: cell)
-        handleTextColor(view: cell, cellState: cellState)
+        configureCell(cell: cell, cellState: cellState)
     }
     
     
