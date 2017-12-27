@@ -10,11 +10,46 @@ import UIKit
 
 class TodoTableViewController: UIViewController, NewTodoTableViewControllerProtocol, TodoTableViewCellProtocol {
 
-    let cellId = "todoCell"
+    let cellIdForTableView = "todoCell"
     var todos = [Todo]()
     var numOfTaskDone = 0
     
-    var collectionView: UICollectionView!
+    var tableView: UITableView!
+    
+    let backgroundColor = UIColor(rgb: 0xA47AF4)
+    let insideTextColor = UIColor(rgb: 0xDCDBE8)
+    let outsideTextColor = UIColor(rgb: 0xA492D0)
+    let selectedTextColor = UIColor(rgb: 0xA492D0)
+    
+    
+    var calendarView: JTAppleCalendarView!
+    let cellIdForCalendar = "id"
+    let formatter = DateFormatter()
+    
+    let monthLabel:  UILabel = {
+        let lbl = UILabel()
+        lbl.translatesAutoresizingMaskIntoConstraints = false
+        lbl.font = UIFont(name: lbl.font.fontName, size: 34)
+        lbl.textColor = .white
+        lbl.textAlignment = .center
+        return lbl
+    }()
+    
+    let yearLabel:  UILabel = {
+        let lbl = UILabel()
+        lbl.translatesAutoresizingMaskIntoConstraints = false
+        lbl.font = UIFont(name: lbl.font.fontName, size: 20)
+        lbl.textColor = .white
+        lbl.textAlignment = .center
+        return lbl
+    }()
+    
+    var dayView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .white
+        return view
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +65,7 @@ class TodoTableViewController: UIViewController, NewTodoTableViewControllerProto
             todos = Todo.loadSampleTodos()
         }
         updateTaskCount()
-        setupView()
+        setupTableView()
     }
 
     override func didReceiveMemoryWarning() {
@@ -39,44 +74,159 @@ class TodoTableViewController: UIViewController, NewTodoTableViewControllerProto
     }
     
     // MARK: Setup
-    private func setupView() {
+    private func setupTableView() {
         
         // This is to remove view underneath navigation bar
         self.navigationController?.navigationBar.isTranslucent = false
         
-        let bgView = UIImageView(image: UIImage(named: "bolder_bg"))
-        bgView.translatesAutoresizingMaskIntoConstraints = false
-        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.dark)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.translatesAutoresizingMaskIntoConstraints = false
-        blurEffectView.alpha = 0.7
+        self.tableView = UITableView()
+        self.tableView.translatesAutoresizingMaskIntoConstraints = false
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
+        self.tableView.backgroundColor = .clear
+        self.tableView.layer.cornerRadius = 10
+        self.tableView.layer.masksToBounds = true
+        self.tableView.register(TodoTableViewCell.self, forCellReuseIdentifier: cellIdForTableView)
+        self.view.addSubview(tableView)
         
-        self.view.addSubview(bgView)
-        self.view.addSubview(blurEffectView)
+        self.view.backgroundColor = backgroundColor
         
-        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: 90, height: 120)
         
-        self.collectionView = UICollectionView(frame: view.frame, collectionViewLayout: layout)
-        self.collectionView.translatesAutoresizingMaskIntoConstraints = false
-        self.collectionView.delegate = self
-        self.collectionView.dataSource = self
-        self.collectionView.backgroundColor = .clear
-        self.collectionView.collectionViewLayout = layout
-        self.collectionView.layer.cornerRadius = 10
-        self.collectionView.layer.masksToBounds = true
-        self.collectionView.register(TodoCollectionViewCell.self, forCellWithReuseIdentifier: cellId)
-        self.view.addSubview(collectionView)
+        // Setup up calendarView
+        self.calendarView = JTAppleCalendarView()
+        self.calendarView.scrollDirection = .horizontal
+        self.calendarView.showsHorizontalScrollIndicator = false
+        self.calendarView.isScrollEnabled = true
+        self.calendarView.isPagingEnabled = true
+        self.calendarView.minimumLineSpacing = 0
+        self.calendarView.minimumInteritemSpacing = 0
+        self.calendarView.calendarDelegate = self
+        self.calendarView.calendarDataSource = self
+        self.calendarView.translatesAutoresizingMaskIntoConstraints = false
+        self.calendarView.backgroundColor = .clear
+        self.calendarView.register(CustomCalendarCell.self, forCellWithReuseIdentifier: cellIdForCalendar)
+        self.view.addSubview(calendarView)
+        self.view.addSubview(monthLabel)
+        self.view.addSubview(yearLabel)
         
-        self.view.addContraintsWithFormat(format: "H:|[v0]|", views: bgView)
-        self.view.addContraintsWithFormat(format: "V:|[v0]|", views: bgView)
-        self.view.addContraintsWithFormat(format: "H:|[v0]|", views: blurEffectView)
-        self.view.addContraintsWithFormat(format: "V:|[v0]|", views: blurEffectView)
-        self.view.addContraintsWithFormat(format: "H:|-25-[v0]-25-|", views: collectionView)
-        self.view.addContraintsWithFormat(format: "V:|-35-[v0]-35-|", views: collectionView)
+        // This is used to labels to present the months and year
+        self.calendarView.visibleDates() { (visibleDates) in
+            let date = visibleDates.monthDates.first!.date
+            
+            self.formatter.dateFormat = "MMMM"
+            self.monthLabel.text = self.formatter.string(from: date)
+            
+            self.formatter.dateFormat = "yyyy"
+            self.yearLabel.text = self.formatter.string(from: date)
+        }
+        
+        setupDaysView()
+        
+        self.view.addContraintsWithFormat(format: "H:|[v0]|", views: calendarView)
+        self.view.addContraintsWithFormat(format: "V:|-25-[v0]-15-[v1]-10-[v2][v3(240)][v4]|", views: yearLabel,monthLabel,dayView,calendarView,tableView)
+        self.view.addContraintsWithFormat(format: "H:|[v0]|", views: dayView)
+        self.view.addContraintsWithFormat(format: "H:|-20-[v0]", views: monthLabel)
+        self.view.addContraintsWithFormat(format: "H:|-20-[v0]", views: yearLabel)
+        
+        self.view.addContraintsWithFormat(format: "H:|[v0]|", views: tableView)
         
         
     }
+    
+    // MARK: Setup
+    private func setupCalendarView() {
+        self.view.backgroundColor = backgroundColor
+        
+        
+        // Setup up calendarView
+        self.calendarView = JTAppleCalendarView()
+        self.calendarView.scrollDirection = .horizontal
+        self.calendarView.showsHorizontalScrollIndicator = false
+        self.calendarView.isScrollEnabled = true
+        self.calendarView.isPagingEnabled = true
+        self.calendarView.minimumLineSpacing = 0
+        self.calendarView.minimumInteritemSpacing = 0
+        self.calendarView.calendarDelegate = self
+        self.calendarView.calendarDataSource = self
+        self.calendarView.translatesAutoresizingMaskIntoConstraints = false
+        self.calendarView.backgroundColor = .clear
+        self.calendarView.register(CustomCalendarCell.self, forCellWithReuseIdentifier: cellIdForCalendar)
+        self.view.addSubview(calendarView)
+        self.view.addSubview(monthLabel)
+        self.view.addSubview(yearLabel)
+        
+        // This is used to labels to present the months and year
+        self.calendarView.visibleDates() { (visibleDates) in
+            let date = visibleDates.monthDates.first!.date
+            
+            self.formatter.dateFormat = "MMMM"
+            self.monthLabel.text = self.formatter.string(from: date)
+            
+            self.formatter.dateFormat = "yyyy"
+            self.yearLabel.text = self.formatter.string(from: date)
+        }
+        
+        setupDaysView()
+        
+        self.view.addContraintsWithFormat(format: "H:|[v0]|", views: calendarView)
+        self.view.addContraintsWithFormat(format: "V:|-55-[v0]-15-[v1]-10-[v2][v3(240)]", views: yearLabel,monthLabel,dayView,calendarView)
+        self.view.addContraintsWithFormat(format: "H:|[v0]|", views: dayView)
+        self.view.addContraintsWithFormat(format: "H:|-20-[v0]", views: monthLabel)
+        self.view.addContraintsWithFormat(format: "H:|-20-[v0]", views: yearLabel)
+        
+    }
+    
+    private func setupDaysView() {
+        self.view.addSubview(dayView)
+        
+        let days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
+        var daysLabels = [UILabel]()
+        
+        for day in days {
+            let lbl = UILabel()
+            lbl.translatesAutoresizingMaskIntoConstraints = false
+            lbl.text = day
+            lbl.textAlignment = .center
+            lbl.textColor = insideTextColor
+            daysLabels.append(lbl)
+        }
+        
+        for lbl in daysLabels {
+            self.dayView.addSubview(lbl)
+            self.dayView.addContraintsWithFormat(format: "V:|[v0]|", views: lbl)
+        }
+        
+        self.dayView.backgroundColor = .clear
+        self.dayView.addContraintsWithFormat(format: "H:|[v0(60)][v1(60)][v2(60)][v3(60)][v4(60)][v5(60)][v6]|", views: daysLabels[0],daysLabels[1],daysLabels[2],daysLabels[3],daysLabels[4],daysLabels[5],daysLabels[6])
+        
+    }
+    
+    func handleTextColor(view:JTAppleCell?,cellState: CellState) {
+        guard let validCell = view as? CustomCalendarCell else { return }
+        
+        if cellState.isSelected {
+            validCell.dateLabel.textColor = selectedTextColor
+        } else {
+            if cellState.dateBelongsTo == .thisMonth {
+                validCell.dateLabel.textColor = insideTextColor
+            } else {
+                validCell.dateLabel.textColor = outsideTextColor
+            }
+        }
+    }
+    
+    func handleCellSelectedColor(view: JTAppleCell?) {
+        guard let validCell = view as? CustomCalendarCell else { return }
+        
+        if validCell.isSelected {
+            validCell.selectedView.isHidden = false
+        } else {
+            validCell.selectedView.isHidden = true
+        }
+    }
+    
+    
+    // MARK: Table View Button Actions
     
     @objc func addNewTodo(_: UIBarButtonItem){
         let dvc = NewTodoTableViewController()
@@ -85,19 +235,20 @@ class TodoTableViewController: UIViewController, NewTodoTableViewControllerProto
     }
     
     // MARK: Protocol Functions
-    func completeButtonTapped(sender: TodoCollectionViewCell) {
-        if let indexPath = collectionView.indexPath(for: sender) {
+    func completeButtonTapped(sender: TodoTableViewCell) {
+        if let indexPath = tableView.indexPath(for: sender) {
             let todo = todos[indexPath.row]
             todo.isComplete = !todo.isComplete
             todos[indexPath.row] = todo
-            collectionView.reloadItems(at: [indexPath])
+            tableView.reloadRows(at: [indexPath], with: .fade)
+            tableView.reloadData()
         }
         updateTaskCount()
         Todo.saveTodos(todos)
-        collectionView.reloadData()
+        tableView.reloadData()
     }
     
-    func moreButtonTapped(sender: TodoCollectionViewCell) {
+    func moreButtonTapped(sender: TodoTableViewCell) {
         let completeCenter = sender.completedButton.center
         let editCenter = sender.editButton.center
         let deleteCenter = sender.deleteButton.center
@@ -124,24 +275,24 @@ class TodoTableViewController: UIViewController, NewTodoTableViewControllerProto
         }
     }
     
-    func deleteButtonTapped(sender: TodoCollectionViewCell) {
-        if let indexPath = collectionView.indexPath(for: sender) {
+    func deleteButtonTapped(sender: TodoTableViewCell) {
+        if let indexPath = tableView.indexPath(for: sender) {
             todos.remove(at: indexPath.row)
-            collectionView.deleteItems(at: [indexPath])
+            tableView.deleteRows(at: [indexPath], with: .fade)
             updateTaskCount()
-            collectionView.reloadData()
+            tableView.reloadData()
             Todo.saveTodos(todos)
         }
     }
     
-    func editButtonTapped(sender: TodoCollectionViewCell) {
+    func editButtonTapped(sender: TodoTableViewCell) {
         print("edot")
     }
     
     func addTodo(todo: Todo) {
         self.todos.append(todo)
         Todo.saveTodos(todos)
-        collectionView.reloadData()
+        tableView.reloadData()
     }
     
     func updateTaskCount() {
@@ -156,38 +307,37 @@ class TodoTableViewController: UIViewController, NewTodoTableViewControllerProto
 }
 
 
-extension TodoTableViewController:  UICollectionViewDelegate,UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    //MARK: Tableview delegate and datasource
-   
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: 100)
+//MARK: Tableview delegate and datasource
+
+extension TodoTableViewController:  UITableViewDelegate,UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 120
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return todos.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! TodoCollectionViewCell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdForTableView, for: indexPath) as! TodoTableViewCell
         
-        cell.layer.cornerRadius = 10
-        cell.layer.masksToBounds = true
         cell.backgroundColor = .white
         
         // Create a todo object for each object in array
         let todo = todos[indexPath.row]
-
+        
         // Set labels
         cell.titleLabel.text = todo.title
         cell.notesLabel.text = todo.notes!
         cell.completedButton.isSelected = todo.isComplete
-
+        
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .full
         dateFormatter.dateFormat = "MM/dd/yy h:mm a"
-
+        
         cell.createdDateLabel.text = "Created: \(dateFormatter.string(from: todo.dueDate))"
-
+        
         cell.delegate = self
         
         let image = UIImage(named: "check")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
@@ -206,5 +356,51 @@ extension TodoTableViewController:  UICollectionViewDelegate,UICollectionViewDat
 }
 
 
+extension TodoTableViewController: JTAppleCalendarViewDelegate, JTAppleCalendarViewDataSource {
+    func calendar(_ calendar: JTAppleCalendarView, willDisplay cell: JTAppleCell, forItemAt date: Date, cellState: CellState, indexPath: IndexPath) {
+    }
+    
+    
+    func calendar(_ calendar: JTAppleCalendarView, cellForItemAt date: Date, cellState: CellState, indexPath: IndexPath) -> JTAppleCell {
+        let cell = calendar.dequeueReusableJTAppleCell(withReuseIdentifier: cellIdForCalendar, for: indexPath) as! CustomCalendarCell
+        cell.dateLabel.text = cellState.text
+        handleCellSelectedColor(view: cell)
+        handleTextColor(view: cell, cellState: cellState)
+        return cell
+    }
+    
+    func configureCalendar(_ calendar: JTAppleCalendarView) -> ConfigurationParameters {
+        formatter.dateFormat = "MM dd yyyy"
+        formatter.timeZone = Calendar.current.timeZone
+        formatter.locale = Calendar.current.locale
+        
+        let startDate = formatter.date(from: "01 01 2018")
+        let endDate = formatter.date(from: "01 01 2019")
+        
+        return ConfigurationParameters(startDate: startDate!, endDate: endDate!)
+    }
+    
+    func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentWith visibleDates: DateSegmentInfo) {
+        let date = visibleDates.monthDates.first!.date
+        
+        self.formatter.dateFormat = "MMMM"
+        self.monthLabel.text = formatter.string(from: date)
+        
+        self.formatter.dateFormat = "yyyy"
+        self.yearLabel.text = self.formatter.string(from: date)
+    }
+    
+    func calendar(_ calendar: JTAppleCalendarView, didSelectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
+        handleCellSelectedColor(view: cell)
+        handleTextColor(view: cell, cellState: cellState)
+    }
+    
+    func calendar(_ calendar: JTAppleCalendarView, didDeselectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
+        handleCellSelectedColor(view: cell)
+        handleTextColor(view: cell, cellState: cellState)
+    }
+    
+    
+}
 
 

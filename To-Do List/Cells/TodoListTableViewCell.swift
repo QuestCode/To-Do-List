@@ -9,14 +9,14 @@
 import UIKit
 
 @objc protocol TodoTableViewCellProtocol {
-    func moreButtonTapped(sender: TodoCollectionViewCell)
-    func completeButtonTapped(sender: TodoCollectionViewCell)
-    func deleteButtonTapped(sender: TodoCollectionViewCell)
-    func editButtonTapped(sender: TodoCollectionViewCell)
+    func moreButtonTapped(sender: TodoTableViewCell)
+    func completeButtonTapped(sender: TodoTableViewCell)
+    func deleteButtonTapped(sender: TodoTableViewCell)
+    func editButtonTapped(sender: TodoTableViewCell)
 }
 
 
-class TodoCollectionViewCell: UICollectionViewCell {
+class TodoTableViewCell: UITableViewCell {
     
     var delegate: TodoTableViewCellProtocol?
     
@@ -75,8 +75,8 @@ class TodoCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
     }
     

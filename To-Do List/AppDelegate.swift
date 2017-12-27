@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let navigationController = UINavigationController(rootViewController: TodoTableViewController())
         navigationController.navigationBar.tintColor = .white
-        navigationController.navigationBar.barTintColor = UIColor(rgb: 0x3ECEFF)
+        navigationController.navigationBar.barTintColor = UIColor(rgb: 0xA47AF4)
         navigationController.navigationBar.barStyle = .blackTranslucent
         
         // For Bar Title
