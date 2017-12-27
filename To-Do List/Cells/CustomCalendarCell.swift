@@ -34,6 +34,8 @@ class CustomCalendarCell: JTAppleCell {
         return view
     }()
     
+    var isCompleted = false
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupCell()

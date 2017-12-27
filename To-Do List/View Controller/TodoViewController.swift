@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TodoViewController: UIViewController, NewTodoTableViewControllerProtocol, TodoTableViewCellProtocol {
+class TodoViewController: UIViewController, NewTodoTableViewControllerProtocol {
 
     let cellIdForTableView = "todoCell"
     var todos = [Todo]()
@@ -226,33 +226,6 @@ class TodoViewController: UIViewController, NewTodoTableViewControllerProtocol, 
         tableView.reloadData()
     }
     
-    func moreButtonTapped(sender: TodoTableViewCell) {
-        let completeCenter = sender.completedButton.center
-        let editCenter = sender.editButton.center
-        let deleteCenter = sender.deleteButton.center
-        let moreCenter = sender.moreButton.center
-        
-        let moreImage = UIImage(named: "more")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-        if sender.moreButton.currentImage == moreImage {
-            let circleImage = UIImage(named: "circle")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-            sender.moreButton.setImage(circleImage, for: .normal)
-            sender.completedButton.alpha = 1
-            sender.editButton.alpha = 1
-            sender.deleteButton.alpha = 1
-            sender.completedButton.center = completeCenter
-            sender.editButton.center = editCenter
-            sender.deleteButton.center = deleteCenter
-        } else {
-            sender.moreButton.setImage(moreImage, for: .normal)
-            sender.completedButton.alpha = 0
-            sender.editButton.alpha = 0
-            sender.deleteButton.alpha = 0
-            sender.completedButton.center = moreCenter
-            sender.editButton.center = moreCenter
-            sender.deleteButton.center = moreCenter
-        }
-    }
-    
     func deleteButtonTapped(sender: TodoTableViewCell) {
         if let indexPath = tableView.indexPath(for: sender) {
             todos.remove(at: indexPath.row)
@@ -301,6 +274,7 @@ extension TodoViewController:  UITableViewDelegate,UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdForTableView, for: indexPath) as! TodoTableViewCell
         
         cell.backgroundColor = .white
+        cell.selectionStyle = .none
         
         // Create a todo object for each object in array
         let todo = todos[indexPath.row]
@@ -308,7 +282,6 @@ extension TodoViewController:  UITableViewDelegate,UITableViewDataSource {
         // Set labels
         cell.titleLabel.text = todo.title
         cell.notesLabel.text = todo.notes!
-        cell.completedButton.isSelected = todo.isComplete
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .full
@@ -316,23 +289,31 @@ extension TodoViewController:  UITableViewDelegate,UITableViewDataSource {
         
         cell.createdDateLabel.text = "Due: \(dateFormatter.string(from: todo.dueDate))"
         
-        cell.delegate = self
+        cell.selectionView.isHidden = !todo.isComplete ? true : false
         
-        let image = UIImage(named: "check")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-        
-        if todo.isComplete{
-            // Have to render image to change color of image
-            cell.selectionView.backgroundColor = UIColor(rgb: 0x3ECEFF)
-            cell.completedButton.tintColor = .red
-            cell.completedButton.setImage(image, for: .normal)
-        } else {
-            cell.selectionView.backgroundColor = .white
-            cell.completedButton.setImage(image, for: .normal)
-        }
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let cell = tableView.cellForRow(at: indexPath) as! TodoTableViewCell
+        let completedAction = UIContextualAction(style: .normal, title: cell.selectionView.isHidden ? "Check" : "Uncheck") { (action, view, _) in
+            self.completeButtonTapped(sender: cell)
+        }
+        completedAction.backgroundColor = UIColor(rgb: 0x7ABA7A)
+        return UISwipeActionsConfiguration(actions: [completedAction])
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let cell = tableView.cellForRow(at: indexPath) as! TodoTableViewCell
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (action, view, _) in
+            self.deleteButtonTapped(sender: cell)
+        }
+        return UISwipeActionsConfiguration(actions: [deleteAction])
     }
 }
 
+
+// MARK: Calendar Delegate and Datasource
 
 extension TodoViewController: JTAppleCalendarViewDelegate, JTAppleCalendarViewDataSource {
     func calendar(_ calendar: JTAppleCalendarView, willDisplay cell: JTAppleCell, forItemAt date: Date, cellState: CellState, indexPath: IndexPath) {
