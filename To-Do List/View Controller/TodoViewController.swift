@@ -12,6 +12,7 @@ class TodoViewController: UIViewController, NewTodoTableViewControllerProtocol {
 
     let cellIdForTableView = "todoCell"
     var todos = [Todo]()
+    var todosDict = [String:String]()
     var numOfTaskDone = 0
     
     var tableView: UITableView!
@@ -132,6 +133,7 @@ class TodoViewController: UIViewController, NewTodoTableViewControllerProtocol {
         }
         
         setupDaysView()
+        formatTodosDict()
         
         self.view.addContraintsWithFormat(format: "H:|[v0]|", views: calendarView)
         self.view.addContraintsWithFormat(format: "V:|-40-[v0]-15-[v1]-10-[v2][v3(240)][v4]|", views: yearLabel,monthLabel,dayView,calendarView,tableView)
@@ -178,6 +180,7 @@ class TodoViewController: UIViewController, NewTodoTableViewControllerProtocol {
         
         handleCellSelectedColor(cell: customCell, cellState: cellState)
         handleTextColor(cell: customCell, cellState: cellState)
+        handleCellEvents(cell: customCell, cellState: cellState)
     }
     
     func handleTextColor(cell:CustomCalendarCell,cellState: CellState) {
@@ -201,6 +204,10 @@ class TodoViewController: UIViewController, NewTodoTableViewControllerProtocol {
     
     func handleCellSelectedColor(cell: CustomCalendarCell, cellState: CellState) {
         cell.selectedView.isHidden = cellState.isSelected ? false : true
+    }
+    
+    func handleCellEvents(cell: CustomCalendarCell, cellState: CellState) {
+        cell.eventDotView.isHidden = !todosDict.contains { $0.key == formatter.string(from: cellState.date) }
     }
     
     
@@ -253,6 +260,31 @@ class TodoViewController: UIViewController, NewTodoTableViewControllerProtocol {
                 numOfTaskDone = numOfTaskDone + 1
             }
         }
+    }
+    
+    func formatTodosDict() {
+        DispatchQueue.global().asyncAfter(deadline: .now()) {
+            let todoObjects = self.createTodosDict()
+            for (date, event) in todoObjects {
+                let stringDate = self.formatter.string(from: date)
+                self.todosDict[stringDate] = event
+            }
+        }
+        
+        DispatchQueue.main.async {
+            self.calendarView.reloadData()
+        }
+    }
+    
+    func createTodosDict() -> [Date:String] {
+        formatter.dateFormat = "MM dd yyyy"
+        
+        var dict = [Date:String]()
+        
+        for todo in todos {
+            dict[todo.dueDate] =  todo.title
+        }
+        return dict
     }
     
 }
