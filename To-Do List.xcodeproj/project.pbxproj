@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2133A9E61FF1A26A0092D6CA /* todos.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2133A9E51FF1A26A0092D6CA /* todos.plist */; };
+		213CE9C11FF49E1100D968E3 /* EditTodoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 213CE9C01FF49E1100D968E3 /* EditTodoViewController.swift */; };
 		219261B31FEC6E5A00F09045 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219261B21FEC6E5A00F09045 /* AppDelegate.swift */; };
 		219261B51FEC6E5A00F09045 /* TodoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219261B41FEC6E5A00F09045 /* TodoViewController.swift */; };
 		219261BA1FEC6E5A00F09045 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 219261B91FEC6E5A00F09045 /* Assets.xcassets */; };
@@ -15,7 +16,7 @@
 		219261C61FEC716200F09045 /* TodoListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219261C51FEC716200F09045 /* TodoListTableViewCell.swift */; };
 		219261C91FEC71B300F09045 /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219261C81FEC71B300F09045 /* Todo.swift */; };
 		219261CB1FEC740000F09045 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219261CA1FEC740000F09045 /* Extensions.swift */; };
-		219261CE1FEC90F500F09045 /* NewTodoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219261CD1FEC90F500F09045 /* NewTodoTableViewController.swift */; };
+		219261CE1FEC90F500F09045 /* NewTodoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219261CD1FEC90F500F09045 /* NewTodoViewController.swift */; };
 		21B6A1351FF2CE00001185C9 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B6A1341FF2CE00001185C9 /* HeaderView.swift */; };
 		21EE19931FF3E684008BA53A /* JTAppleCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EE19811FF3E684008BA53A /* JTAppleCalendarView.swift */; };
 		21EE19941FF3E684008BA53A /* UserInteractionFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EE19821FF3E684008BA53A /* UserInteractionFunctions.swift */; };
@@ -40,6 +41,7 @@
 
 /* Begin PBXFileReference section */
 		2133A9E51FF1A26A0092D6CA /* todos.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = todos.plist; sourceTree = "<group>"; };
+		213CE9C01FF49E1100D968E3 /* EditTodoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTodoViewController.swift; sourceTree = "<group>"; };
 		219261AF1FEC6E5A00F09045 /* To-Do List.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "To-Do List.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		219261B21FEC6E5A00F09045 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		219261B41FEC6E5A00F09045 /* TodoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoViewController.swift; sourceTree = "<group>"; };
@@ -49,7 +51,7 @@
 		219261C51FEC716200F09045 /* TodoListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListTableViewCell.swift; sourceTree = "<group>"; };
 		219261C81FEC71B300F09045 /* Todo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Todo.swift; sourceTree = "<group>"; };
 		219261CA1FEC740000F09045 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
-		219261CD1FEC90F500F09045 /* NewTodoTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTodoTableViewController.swift; sourceTree = "<group>"; };
+		219261CD1FEC90F500F09045 /* NewTodoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTodoViewController.swift; sourceTree = "<group>"; };
 		21B6A1341FF2CE00001185C9 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		21EE19811FF3E684008BA53A /* JTAppleCalendarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JTAppleCalendarView.swift; sourceTree = "<group>"; };
 		21EE19821FF3E684008BA53A /* UserInteractionFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInteractionFunctions.swift; sourceTree = "<group>"; };
@@ -130,7 +132,8 @@
 			isa = PBXGroup;
 			children = (
 				219261B41FEC6E5A00F09045 /* TodoViewController.swift */,
-				219261CD1FEC90F500F09045 /* NewTodoTableViewController.swift */,
+				219261CD1FEC90F500F09045 /* NewTodoViewController.swift */,
+				213CE9C01FF49E1100D968E3 /* EditTodoViewController.swift */,
 			);
 			path = "View Controller";
 			sourceTree = "<group>";
@@ -240,8 +243,9 @@
 				21EE199E1FF3E684008BA53A /* InternalQueryFunctions.swift in Sources */,
 				21EE19971FF3E684008BA53A /* InternalActionFunctions.swift in Sources */,
 				21EE199D1FF3E684008BA53A /* UIScrollViewDelegates.swift in Sources */,
-				219261CE1FEC90F500F09045 /* NewTodoTableViewController.swift in Sources */,
+				219261CE1FEC90F500F09045 /* NewTodoViewController.swift in Sources */,
 				21EE19A21FF3E685008BA53A /* JTAppleCalendarLayout.swift in Sources */,
+				213CE9C11FF49E1100D968E3 /* EditTodoViewController.swift in Sources */,
 				21EE19931FF3E684008BA53A /* JTAppleCalendarView.swift in Sources */,
 				21EE19941FF3E684008BA53A /* UserInteractionFunctions.swift in Sources */,
 				219261CB1FEC740000F09045 /* Extensions.swift in Sources */,

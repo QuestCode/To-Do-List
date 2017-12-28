@@ -20,11 +20,11 @@ class TodoTableViewCell: UITableViewCell {
     }()
     
     let titleLabel: UILabel = {
-        let label = UILabel(fontSize: 24)
+        let label = UILabel(fontSize: 16)
         return label
     }()
     
-    let createdDateLabel: UILabel = {
+    let dueDateLabel: UILabel = {
         let label = UILabel(fontSize: 14)
         label.textColor = .lightGray
         label.textAlignment = .right
@@ -35,6 +35,18 @@ class TodoTableViewCell: UITableViewCell {
         let label = UILabel(fontSize: 18)
         return label
     }()
+    
+    var dotView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 2.5
+        view.layer.masksToBounds = true
+        view.backgroundColor = UIColor(rgb: 0xA47AF4)
+        return view
+    }()
+    
+    var date: Date?
+    
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -52,13 +64,16 @@ class TodoTableViewCell: UITableViewCell {
     
     func setupViews() {
         addSubview(titleLabel)
-        addSubview(createdDateLabel)
+        addSubview(dueDateLabel)
         addSubview(checkView)
+        addSubview(dotView)
         
-        addContraintsWithFormat(format: "H:[v0(20)]-30-|", views: checkView)
-        addContraintsWithFormat(format: "V:|-45-[v0(20)]", views: checkView)
-        addContraintsWithFormat(format: "H:|-10-[v0]", views: titleLabel)
-        addContraintsWithFormat(format: "V:|-10-[v0]-5-[v1]", views: createdDateLabel,titleLabel)
-        addContraintsWithFormat(format: "H:|-10-[v0]", views: createdDateLabel)
+        addContraintsWithFormat(format: "H:[v0(10)]-30-|", views: checkView)
+        addContraintsWithFormat(format: "V:|-30-[v0(10)]", views: checkView)
+        addContraintsWithFormat(format: "H:|-10-[v0]-10-[v1(5)]-20-[v2]", views: dueDateLabel,dotView,titleLabel)
+        addContraintsWithFormat(format: "V:|-20-[v0]", views: dueDateLabel)
+        addContraintsWithFormat(format: "V:|-25-[v0(5)]", views: dotView)
+        addContraintsWithFormat(format: "V:|-20-[v0]", views: titleLabel)
+        addContraintsWithFormat(format: "H:|-10-[v0]", views: dueDateLabel)
     }
 }

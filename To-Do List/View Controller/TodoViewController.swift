@@ -8,10 +8,11 @@
 
 import UIKit
 
-class TodoViewController: UIViewController, NewTodoTableViewControllerProtocol {
+class TodoViewController: UIViewController, NewTodoViewControllerProtocol {
 
     let cellIdForTableView = "todoCell"
     var todos = [Todo]()
+    var selectedTodos = [Todo]()
     var todosDict = [String:String]()
     var numOfTaskDone = 0
     
@@ -70,9 +71,10 @@ class TodoViewController: UIViewController, NewTodoTableViewControllerProtocol {
         
         if let savedTodos = Todo.loadTodos() {
             todos = savedTodos
-            print("found")
+            todos.sort{ $0.dueDate < $1.dueDate }
         } else {
             todos = Todo.loadSampleTodos()
+            todos.sort{ $0.dueDate < $1.dueDate }
         }
         updateTaskCount()
         setupTableView()
@@ -117,6 +119,7 @@ class TodoViewController: UIViewController, NewTodoTableViewControllerProtocol {
         self.calendarView.register(CustomCalendarCell.self, forCellWithReuseIdentifier: cellIdForCalendar)
         self.calendarView.scrollToDate(Date(),animateScroll: false)
         self.calendarView.selectDates([ Date() ])
+        self.calendarView.reloadData()
         self.view.addSubview(monthLabel)
         self.view.addSubview(yearLabel)
         self.view.addSubview(addNewTask)
@@ -214,9 +217,9 @@ class TodoViewController: UIViewController, NewTodoTableViewControllerProtocol {
     // MARK: Table View Button Actions
     
     @objc func addNewTodo(_: UIBarButtonItem){
-        let dvc = NewTodoTableViewController()
+        let dvc = NewTodoViewController()
         dvc.delegate = self
-        self.navigationController?.pushViewController(dvc, animated: true)
+        self.present(dvc, animated: true, completion: nil)
     }
     
     // MARK: Protocol Functions
@@ -244,7 +247,11 @@ class TodoViewController: UIViewController, NewTodoTableViewControllerProtocol {
     }
     
     func editButtonTapped(sender: TodoTableViewCell) {
-        print("edot")
+        let dvc = EditTodoViewController()
+        dvc.delegate = self
+        dvc.todo = Todo(title: sender.titleLabel.text!, dueDate: sender.date!, notes: sender.notesLabel.text)
+        print(dvc.todo!.dueDate)
+        self.present(dvc, animated: true, completion: nil)
     }
     
     func addTodo(todo: Todo) {
@@ -295,11 +302,11 @@ class TodoViewController: UIViewController, NewTodoTableViewControllerProtocol {
 extension TodoViewController:  UITableViewDelegate,UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 120
+        return 90
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return todos.count
+        return selectedTodos.count != 0 ? selectedTodos.count : todos.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -309,17 +316,18 @@ extension TodoViewController:  UITableViewDelegate,UITableViewDataSource {
         cell.selectionStyle = .none
         
         // Create a todo object for each object in array
-        let todo = todos[indexPath.row]
+        let todo = selectedTodos.count != 0 ? selectedTodos[indexPath.row] : todos[indexPath.row]
         
         // Set labels
         cell.titleLabel.text = todo.title
         cell.notesLabel.text = todo.notes!
+        cell.date = todo.dueDate
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .full
-        dateFormatter.dateFormat = "MM/dd/yy h:mm a"
+        dateFormatter.dateFormat = "h:mm a"
         
-        cell.createdDateLabel.text = "Due: \(dateFormatter.string(from: todo.dueDate))"
+        cell.dueDateLabel.text = "Due: \(dateFormatter.string(from: todo.dueDate))"
         
         cell.checkView.isHidden = !todo.isComplete ? true : false
         
@@ -369,7 +377,7 @@ extension TodoViewController: JTAppleCalendarViewDelegate, JTAppleCalendarViewDa
         formatter.timeZone = Calendar.current.timeZone
         formatter.locale = Calendar.current.locale
         
-        let startDate = formatter.date(from: "01 01 1900")
+        let startDate = formatter.date(from: "04 17 1993")
         let endDate = formatter.date(from: "01 01 2019")
         
         return ConfigurationParameters(startDate: startDate!, endDate: endDate!)
@@ -386,7 +394,18 @@ extension TodoViewController: JTAppleCalendarViewDelegate, JTAppleCalendarViewDa
     }
     
     func calendar(_ calendar: JTAppleCalendarView, didSelectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
+        formatter.dateFormat = "MM dd yyyy"
+        let cellDateString = formatter.string(from: cellState.date)
+        selectedTodos = [Todo]()
+        for todo in todos {
+            let todoDateString = formatter.string(from: todo.dueDate)
+            if todoDateString == cellDateString {
+                selectedTodos.append(todo)
+            }
+        }
         configureCell(cell: cell, cellState: cellState)
+        cell?.bounce()
+        tableView.reloadData()
     }
     
     func calendar(_ calendar: JTAppleCalendarView, didDeselectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
