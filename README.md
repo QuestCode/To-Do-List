@@ -1,6 +1,6 @@
-# To-Do-List
+# To-Do List
 
-**This is a To-Do list app with all the bells and whistles**
+**This is a To-Do list that will help with your everyday tasks**
 
 **Updated Home Screen**
 
