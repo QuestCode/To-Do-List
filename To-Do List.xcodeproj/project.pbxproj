@@ -37,6 +37,7 @@
 		21EE19A31FF3E685008BA53A /* UICollectionViewDelegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EE19911FF3E684008BA53A /* UICollectionViewDelegates.swift */; };
 		21EE19A41FF3E685008BA53A /* GlobalFunctionsAndExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EE19921FF3E684008BA53A /* GlobalFunctionsAndExtensions.swift */; };
 		21EE19A61FF3E79D008BA53A /* CustomCalendarCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EE19A51FF3E79D008BA53A /* CustomCalendarCell.swift */; };
+		21FE8B961FF7343D007E0E35 /* TodoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FE8B951FF7343D007E0E35 /* TodoCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,6 +73,7 @@
 		21EE19911FF3E684008BA53A /* UICollectionViewDelegates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UICollectionViewDelegates.swift; sourceTree = "<group>"; };
 		21EE19921FF3E684008BA53A /* GlobalFunctionsAndExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalFunctionsAndExtensions.swift; sourceTree = "<group>"; };
 		21EE19A51FF3E79D008BA53A /* CustomCalendarCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCalendarCell.swift; sourceTree = "<group>"; };
+		21FE8B951FF7343D007E0E35 /* TodoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +125,7 @@
 			isa = PBXGroup;
 			children = (
 				21EE19A51FF3E79D008BA53A /* CustomCalendarCell.swift */,
+				21FE8B951FF7343D007E0E35 /* TodoCollectionViewCell.swift */,
 				219261C51FEC716200F09045 /* TodoListTableViewCell.swift */,
 			);
 			path = Cells;
@@ -243,6 +246,7 @@
 				21EE199E1FF3E684008BA53A /* InternalQueryFunctions.swift in Sources */,
 				21EE19971FF3E684008BA53A /* InternalActionFunctions.swift in Sources */,
 				21EE199D1FF3E684008BA53A /* UIScrollViewDelegates.swift in Sources */,
+				21FE8B961FF7343D007E0E35 /* TodoCollectionViewCell.swift in Sources */,
 				219261CE1FEC90F500F09045 /* NewTodoViewController.swift in Sources */,
 				21EE19A21FF3E685008BA53A /* JTAppleCalendarLayout.swift in Sources */,
 				213CE9C11FF49E1100D968E3 /* EditTodoViewController.swift in Sources */,
