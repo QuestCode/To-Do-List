@@ -8,14 +8,14 @@
 
 import UIKit
 
-protocol NewTodoViewControllerProtocol {
+protocol NewTodoTableViewControllerProtocol {
     func addTodo(todo: Todo)
 }
 
 
-class NewTodoViewController: UIViewController {
-
-    var delegate: NewTodoViewControllerProtocol?
+class NewTodoTableViewController: UITableViewController {
+    
+    var delegate: NewTodoTableViewControllerProtocol?
     let cellId = "newTodoCell"
     
     let titleTextField = UITextField(placeholder: "Title")
@@ -29,33 +29,14 @@ class NewTodoViewController: UIViewController {
     let dueDatePicker: UIDatePicker = {
         let picker = UIDatePicker()
         picker.translatesAutoresizingMaskIntoConstraints = false
-        picker.minuteInterval = 15
         return picker
     }()
-
+    
     let notesTextView: UITextView = {
         let textView = UITextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 18)
         return textView
-    }()
-    
-    let cancelBtn: UIButton = {
-        let btn = UIButton()
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.backgroundColor = UIColor(rgb: 0xA47AF4)
-        btn.setTitle("Cancel", for: .normal)
-        btn.addTarget(self, action: #selector(cancelTodo(_:)), for: .touchUpInside)
-        return btn
-    }()
-    
-    let doneBtn: UIButton = {
-        let btn = UIButton()
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.backgroundColor = UIColor(rgb: 0xA47AF4)
-        btn.setTitle("Done", for: .normal)
-        btn.addTarget(self, action: #selector(saveTodo(_:)), for: .touchUpInside)
-        return btn
     }()
     
     var isDueDatePickerShown = false {
@@ -68,15 +49,22 @@ class NewTodoViewController: UIViewController {
         return Todo(title: titleTextField.text!, dueDate: dueDatePicker.date, notes: notesTextView.text)
     }
     
+    
+    let titleIndexPath = IndexPath(row: 0, section: 0)
+    let dueDateIndexPath = IndexPath(row: 0, section: 1)
+    let dueDatePickerIndexPath = IndexPath(row: 1, section: 1)
+    let notesIndexPath = IndexPath(row: 0, section: 2)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
-        self.view.backgroundColor = .clear
-
+        
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        setupView()
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelTodo(_:)))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveTodo(_:)))
+        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
         self.dueDatePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
         updateDueDateView()
     }
@@ -84,46 +72,6 @@ class NewTodoViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }
-
-    func setupView() {
-        let bgView = UIView()
-        bgView.translatesAutoresizingMaskIntoConstraints = false
-        bgView.alpha = 0.5
-        self.view.addSubview(bgView)
-        self.view.addContraintsWithFormat(format: "H:|[v0]|", views: bgView)
-        self.view.addContraintsWithFormat(format: "V:|[v0]|", views: bgView)
-        
-        let viewsContainer = UIView()
-        viewsContainer.backgroundColor = .blue
-        viewsContainer.translatesAutoresizingMaskIntoConstraints = false
-        viewsContainer.layer.cornerRadius = 10
-        viewsContainer.layer.masksToBounds = true
-        self.view.addSubview(viewsContainer)
-        self.view.addContraintsWithFormat(format: "H:|-30-[v0]-30-|", views: viewsContainer)
-        self.view.addContraintsWithFormat(format: "V:|-140-[v0]-140-|", views: viewsContainer)
-        
-        viewsContainer.addSubview(titleTextField)
-        viewsContainer.addSubview(dueDateLabel)
-        viewsContainer.addSubview(dueDatePicker)
-        viewsContainer.addSubview(notesTextView)
-        viewsContainer.addSubview(cancelBtn)
-        viewsContainer.addSubview(doneBtn)
-        
-        print((titleTextField.text?.isEmpty)!)
-        
-//        doneBtn.isEnabled = (titleTextField.text?.isEmpty)! ? false : true
-        
-        viewsContainer.addContraintsWithFormat(format: "H:|-10-[v0]|", views: titleTextField)
-        viewsContainer.addContraintsWithFormat(format: "V:|-50-[v0(30)][v1(30)][v2(216)][v3(80)]", views: titleTextField,dueDateLabel,dueDatePicker,notesTextView)
-        viewsContainer.addContraintsWithFormat(format: "V:[v0(30)]-10-|", views: cancelBtn)
-        viewsContainer.addContraintsWithFormat(format: "V:[v0(30)]-10-|", views: doneBtn)
-        viewsContainer.addContraintsWithFormat(format: "H:[v0]-10-|", views: dueDateLabel)
-        viewsContainer.addContraintsWithFormat(format: "H:|[v0]|", views: dueDatePicker)
-        viewsContainer.addContraintsWithFormat(format: "H:|-10-[v0]-10-|", views: notesTextView)
-        viewsContainer.addContraintsWithFormat(format: "H:|-10-[v0(160)]", views: cancelBtn)
-        viewsContainer.addContraintsWithFormat(format: "H:[v0(160)]-10-|", views: doneBtn)
-        
     }
     
     func updateDueDateView() {
@@ -139,12 +87,125 @@ class NewTodoViewController: UIViewController {
     }
     
     @objc func cancelTodo(_: UIBarButtonItem){
-        self.dismiss(animated: true, completion: nil)
+        self.navigationController?.popViewController(animated: true)
     }
     
     @objc func saveTodo(_: UIBarButtonItem){
         self.delegate?.addTodo(todo: todo!)
-        self.dismiss(animated: true, completion: nil)
+        self.navigationController?.popViewController(animated: true)
     }
-
+    
+    // MARK: - Table view data source
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        // #warning Incomplete implementation, return the number of sections
+        return 3
+    }
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 30))
+        headerView.backgroundColor = UIColor(rgb: 0xfd8208)
+        
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let titleLabel = UILabel(fontSize: 20)
+        titleLabel.textAlignment = .left
+        titleLabel.textColor = .black
+        
+        headerView.addSubview(imageView)
+        headerView.addSubview(titleLabel)
+        
+        headerView.addContraintsWithFormat(format: "H:|-10-[v0(30)]-15-[v1]|", views: imageView,titleLabel)
+        headerView.addContraintsWithFormat(format: "V:|-5-[v0(30)]-5-|", views: imageView)
+        headerView.addContraintsWithFormat(format: "V:|[v0]|", views: titleLabel)
+        
+        switch section {
+        case 0:
+            imageView.renderImage(image: UIImage(named: "info")!, color: .gray)
+            titleLabel.text = "Basic Info"
+            return headerView
+        case 1:
+            imageView.renderImage(image: UIImage(named: "time")!, color: .gray)
+            titleLabel.text = "Date"
+            return headerView
+        case 2:
+            imageView.renderImage(image: UIImage(named: "notes")!, color: .gray)
+            titleLabel.text = "Notes"
+            return headerView
+        default: return headerView
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch section {
+        case 0: return 1
+        case 1: return 2
+        case 2: return 1
+        default: return 0
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
+        
+        switch (indexPath.section,indexPath.row) {
+        case (titleIndexPath.section,titleIndexPath.row):
+            cell.addSubview(titleTextField)
+            cell.addContraintsWithFormat(format: "H:|-10-[v0]|", views: titleTextField)
+            cell.addContraintsWithFormat(format: "V:|[v0]|", views: titleTextField)
+            break
+        case (dueDateIndexPath.section,dueDateIndexPath.row):
+            cell.addSubview(dueDateLabel)
+            cell.addContraintsWithFormat(format: "H:[v0]-10-|", views: dueDateLabel)
+            cell.addContraintsWithFormat(format: "V:|[v0]|", views: dueDateLabel)
+            break
+        case (dueDatePickerIndexPath.section,dueDatePickerIndexPath.row):
+            cell.addSubview(dueDatePicker)
+            cell.addContraintsWithFormat(format: "H:|[v0]|", views: dueDatePicker)
+            cell.addContraintsWithFormat(format: "V:|[v0]|", views: dueDatePicker)
+            break
+        case (notesIndexPath.section,notesIndexPath.row):
+            cell.addSubview(notesTextView)
+            cell.addContraintsWithFormat(format: "H:|-10-[v0]|", views: notesTextView)
+            cell.addContraintsWithFormat(format: "V:|[v0]|", views: notesTextView)
+            break
+        default:
+            break
+        }
+        
+        return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch (indexPath.section,indexPath.row) {
+        case (dueDatePickerIndexPath.section,dueDatePickerIndexPath.row):
+            if isDueDatePickerShown {
+                return 216.0
+            } else {
+                return 0.0
+            }
+        case (notesIndexPath.section,notesIndexPath.row):
+            return 120
+        default:
+            return 50
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch (indexPath.section,indexPath.row) {
+        case (dueDateIndexPath.section,dueDateIndexPath.row):
+            if isDueDatePickerShown {
+                isDueDatePickerShown = false
+            } else {
+                isDueDatePickerShown = true
+            }
+            tableView.beginUpdates()
+            tableView.endUpdates()
+            break
+        default: break
+        }
+        
+    }
+    
+    
 }
