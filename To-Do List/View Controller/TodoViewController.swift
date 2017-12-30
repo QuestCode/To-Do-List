@@ -106,22 +106,21 @@ class TodoViewController: UIViewController {
         
         
         // Setup up calendarView
+        
         self.calendarView = JTAppleCalendarView()
         self.view.addSubview(calendarView)
+        self.calendarView.translatesAutoresizingMaskIntoConstraints = false
         self.calendarView.scrollDirection = .horizontal
         self.calendarView.showsHorizontalScrollIndicator = false
-        self.calendarView.isScrollEnabled = true
-        self.calendarView.isPagingEnabled = true
         self.calendarView.minimumLineSpacing = 0
         self.calendarView.minimumInteritemSpacing = 0
         self.calendarView.calendarDelegate = self
         self.calendarView.calendarDataSource = self
-        self.calendarView.translatesAutoresizingMaskIntoConstraints = false
         self.calendarView.backgroundColor = .clear
+        self.calendarView.scrollingMode = .stopAtEachCalendarFrame
         self.calendarView.register(CustomCalendarCell.self, forCellWithReuseIdentifier: cellIdForCalendar)
         self.calendarView.scrollToDate(Date(),animateScroll: false)
         self.calendarView.selectDates([ Date() ])
-        self.calendarView.reloadData()
         self.view.addSubview(monthLabel)
         self.view.addSubview(yearLabel)
         

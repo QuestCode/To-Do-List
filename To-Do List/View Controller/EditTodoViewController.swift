@@ -101,7 +101,7 @@ class EditTodoTableViewController: UITableViewController  {
     }()
     
     var todo: Todo? {
-        return Todo(title: titleTextField.text!, dueDate: dueDatePicker.date, notes: descriptionTextView.text)
+        return Todo(title: titleTextField.text!, dueDate: dueDatePicker.date,numOfHoursRequired: Int(totalHoursTextField.text!)!, notes: descriptionTextView.text)
     }
     
     override func viewDidLoad() {
