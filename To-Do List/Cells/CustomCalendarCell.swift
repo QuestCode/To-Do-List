@@ -50,11 +50,11 @@ class CustomCalendarCell: JTAppleCell {
         
 //        selectedView.dropShadow()
         
-        addContraintsWithFormat(format: "H:|-15-[v0(30)]", views: selectedView)
+        addContraintsWithFormat(format: "H:|-10-[v0(30)]", views: selectedView)
         addContraintsWithFormat(format: "V:|-5-[v0(30)]", views: selectedView)
         addContraintsWithFormat(format: "H:|[v0]|", views: dateLabel)
         addContraintsWithFormat(format: "V:|[v0]|", views: dateLabel)
-        addContraintsWithFormat(format: "H:|-30-[v0(2)]", views: eventDotView)
+        addContraintsWithFormat(format: "H:|-25-[v0(2)]", views: eventDotView)
         addContraintsWithFormat(format: "V:[v0(2)]-5-|", views: eventDotView)
     }
     

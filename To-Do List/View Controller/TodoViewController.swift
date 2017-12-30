@@ -29,15 +29,6 @@ class TodoViewController: UIViewController {
     let cellIdForCalendar = "id"
     let formatter = DateFormatter()
     
-    let addNewTask: UIButton = {
-        let btn = UIButton()
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.tintColor = .white
-        let image = UIImage(named: "plus")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-        btn.setImage(image, for: .normal)
-        return btn
-    }()
-    
     let monthLabel:  UILabel = {
         let lbl = UILabel()
         lbl.translatesAutoresizingMaskIntoConstraints = false
@@ -68,6 +59,8 @@ class TodoViewController: UIViewController {
         
 //        self.title = "To-Do List"
         // This is to remove view underneath navigation bar
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action:  #selector(addNewTodo(_:)))
+        self.view.backgroundColor = backgroundColor
         self.navigationController?.navigationBar.isTranslucent = false
         
         if let savedTodos = Todo.loadTodos() {
@@ -88,8 +81,6 @@ class TodoViewController: UIViewController {
     
     // MARK: Setup
     private func setupTableView() {
-        
-        self.addNewTask.addTarget(self, action: #selector(addNewTodo(_:)), for: .touchUpInside)
         
         // Do any additional setup after loading the view, typically from a nib.
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
@@ -133,7 +124,6 @@ class TodoViewController: UIViewController {
         self.calendarView.reloadData()
         self.view.addSubview(monthLabel)
         self.view.addSubview(yearLabel)
-        self.view.addSubview(addNewTask)
         
         // This is used to labels to present the months and year
         self.calendarView.visibleDates() { (visibleDates) in
@@ -149,15 +139,13 @@ class TodoViewController: UIViewController {
         setupDaysView()
         formatTodosDict()
         
-        self.view.addContraintsWithFormat(format: "H:|[v0]|", views: calendarView)
+        self.view.addContraintsWithFormat(format: "H:|-30-[v0]-30-|", views: calendarView)
         self.view.addContraintsWithFormat(format: "V:|-40-[v0]-15-[v1]-10-[v2][v3(240)][v4]|", views: yearLabel,monthLabel,dayView,calendarView,collectionView)
-        self.view.addContraintsWithFormat(format: "H:|[v0]|", views: dayView)
+        self.view.addContraintsWithFormat(format: "H:|-30-[v0]-30-|", views: dayView)
         self.view.addContraintsWithFormat(format: "H:|-20-[v0]", views: monthLabel)
         self.view.addContraintsWithFormat(format: "H:|-20-[v0]", views: yearLabel)
         
         self.view.addContraintsWithFormat(format: "H:|[v0]|", views: collectionView)
-        self.view.addContraintsWithFormat(format: "H:[v0(30)]-20-|", views: addNewTask)
-        self.view.addContraintsWithFormat(format: "V:|-40-[v0(30)]", views: addNewTask)
         
         
     }
@@ -167,7 +155,7 @@ class TodoViewController: UIViewController {
     private func setupDaysView() {
         self.view.addSubview(dayView)
         
-        let days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
+        let days = ["S","M","T","W","T","F","S"]
         var daysLabels = [UILabel]()
         
         for day in days {
@@ -185,7 +173,7 @@ class TodoViewController: UIViewController {
         }
         
         self.dayView.backgroundColor = .clear
-        self.dayView.addContraintsWithFormat(format: "H:|[v0(60)][v1(60)][v2(60)][v3(60)][v4(60)][v5(60)][v6]|", views: daysLabels[0],daysLabels[1],daysLabels[2],daysLabels[3],daysLabels[4],daysLabels[5],daysLabels[6])
+        self.dayView.addContraintsWithFormat(format: "H:|[v0(50)][v1(50)][v2(50)][v3(50)][v4(50)][v5(50)][v6]|", views: daysLabels[0],daysLabels[1],daysLabels[2],daysLabels[3],daysLabels[4],daysLabels[5],daysLabels[6])
         
     }
     
@@ -232,11 +220,11 @@ class TodoViewController: UIViewController {
     @objc func addNewTodo(_: UIBarButtonItem){
         let dvc = NewTodoTableViewController()
         dvc.delegate = self
-        self.present(dvc, animated: true, completion: nil)
+        self.navigationController?.pushViewController(dvc, animated: true)
     }
     
     // MARK: Protocol Functions
-    func completeButtonTapped(sender: TodoTableViewCell) {
+    @objc func completeButtonTapped(sender: TodoTableViewCell) {
         if let indexPath = tableView.indexPath(for: sender) {
             let todo = todos[indexPath.row]
             todo.isComplete = !todo.isComplete
@@ -305,7 +293,30 @@ class TodoViewController: UIViewController {
 
 // MARK: Edit and Add Protocols
 
-extension TodoViewController: NewTodoTableViewControllerProtocol, EditTodoTableViewControllerProtocol {
+extension TodoViewController: NewTodoTableViewControllerProtocol, EditTodoTableViewControllerProtocol, TodoCollectionViewCellProtocol {
+    func deleteTodo(sender: TodoCollectionViewCell) {
+        if let indexPath = collectionView.indexPath(for: sender) {
+            todos.remove(at: indexPath.row)
+            collectionView.deleteItems(at: [indexPath])
+            updateTaskCount()
+            Todo.saveTodos(todos)
+            collectionView.reloadData()
+        }
+    }
+    
+    @objc func completeTodo(sender: TodoCollectionViewCell) {
+        if let indexPath = collectionView.indexPath(for: sender) {
+            let todo = todos[indexPath.row]
+            todo.isComplete = !todo.isComplete
+            todos[indexPath.row] = todo
+            collectionView.reloadItems(at: [indexPath])
+            collectionView.reloadData()
+        }
+        updateTaskCount()
+        Todo.saveTodos(todos)
+        collectionView.reloadData()
+    }
+    
     func editTodo(todo: Todo) {
         
     }
@@ -326,12 +337,16 @@ extension TodoViewController: UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdForTableView, for: indexPath) as! TodoCollectionViewCell
         cell.backgroundColor = .white
+        cell.layer.borderWidth = 1.0
+        cell.layer.borderColor = UIColor.lightGray.cgColor
         cell.layer.cornerRadius = 5
         cell.layer.masksToBounds = true
         cell.layer.shadowColor = UIColor.black.cgColor
         cell.layer.shadowOpacity = 1
         cell.layer.shadowOffset = CGSize.zero
         cell.layer.shadowRadius = 10
+        
+        cell.delegate = self
         
         formatter.dateFormat = "hh:mm a"
         
@@ -340,73 +355,12 @@ extension TodoViewController: UICollectionViewDelegate, UICollectionViewDataSour
         cell.titleLabel.text = todo.title
         cell.notesLabel.text = todo.notes
         cell.endTimeLabel.text = formatter.string(from: todo.dueDate)
-        cell.checkView.tintColor = todo.isComplete ? backgroundColor : UIColor.gray
+        cell.checkBtn.tintColor = todo.isComplete ? backgroundColor : UIColor.gray
         return cell
     }
     
     
 }
-
-//
-////MARK: Tableview delegate and datasource
-//
-//extension TodoViewController:  UITableViewDelegate,UITableViewDataSource {
-//
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return 90
-//    }
-//
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return selectedTodos.count != 0 ? selectedTodos.count : todos.count
-//    }
-//
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdForTableView, for: indexPath) as! TodoTableViewCell
-//
-//        cell.backgroundColor = .white
-//        cell.selectionStyle = .none
-//
-//        // Create a todo object for each object in array
-//        let todo = selectedTodos.count != 0 ? selectedTodos[indexPath.row] : todos[indexPath.row]
-//
-//        // Set labels
-//        cell.titleLabel.text = todo.title
-//        cell.notesLabel.text = todo.notes!
-//        cell.date = todo.dueDate
-//
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateStyle = .full
-//        dateFormatter.dateFormat = "h:mm a"
-//
-//        cell.dueDateLabel.text = "Due: \(dateFormatter.string(from: todo.dueDate))"
-//
-//        cell.checkView.isHidden = !todo.isComplete ? true : false
-//
-//        return cell
-//    }
-//
-//    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-//        let cell = tableView.cellForRow(at: indexPath) as! TodoTableViewCell
-//        let completedAction = UIContextualAction(style: .normal, title: cell.checkView.isHidden ? "Check" : "Uncheck") { (action, view, _) in
-//            self.completeButtonTapped(sender: cell)
-//        }
-//        completedAction.backgroundColor = UIColor(rgb: 0x7ABA7A)
-//        return UISwipeActionsConfiguration(actions: [completedAction])
-//    }
-//
-//    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-//        let cell = tableView.cellForRow(at: indexPath) as! TodoTableViewCell
-//        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (action, view, _) in
-//            self.deleteButtonTapped(sender: cell)
-//        }
-//        return UISwipeActionsConfiguration(actions: [deleteAction])
-//    }
-//
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let cell = tableView.cellForRow(at: indexPath) as! TodoTableViewCell
-//        self.editButtonTapped(sender: cell)
-//    }
-//}
 
 
 // MARK: Calendar Delegate and Datasource
@@ -456,7 +410,7 @@ extension TodoViewController: JTAppleCalendarViewDelegate, JTAppleCalendarViewDa
         }
         configureCell(cell: cell, cellState: cellState)
         cell?.bounce()
-//        tableView.reloadData()
+        collectionView.reloadData()
     }
     
     func calendar(_ calendar: JTAppleCalendarView, didDeselectDate date: Date, cell: JTAppleCell?, cellState: CellState) {

@@ -8,10 +8,13 @@
 
 import UIKit
 protocol TodoCollectionViewCellProtocol {
-    func deleteTodo(cell)
+    func deleteTodo(sender: TodoCollectionViewCell)
+    func completeTodo(sender: TodoCollectionViewCell)
 }
 
 class TodoCollectionViewCell: UICollectionViewCell {
+    
+    var delegate: TodoCollectionViewCellProtocol?
     
     var clockView: UIImageView = {
         let imageView = UIImageView()
@@ -21,7 +24,7 @@ class TodoCollectionViewCell: UICollectionViewCell {
         return imageView
     }()
     
-    var trashView: UIButton = {
+    var trashBtn: UIButton = {
         let btn = UIButton()
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.tintColor = UIColor.lightGray
@@ -29,7 +32,7 @@ class TodoCollectionViewCell: UICollectionViewCell {
         return btn
     }()
     
-    var checkView: UIButton = {
+    var checkBtn: UIButton = {
         let btn = UIButton()
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.tintColor = UIColor.lightGray
@@ -97,17 +100,29 @@ class TodoCollectionViewCell: UICollectionViewCell {
         addSubview(timeContainer)
         addSubview(infoContainer)
         addSubview(clockView)
-        addSubview(trashView)
-        addSubview(checkView)
+        addSubview(trashBtn)
+        addSubview(checkBtn)
         
         addContraintsWithFormat(format: "H:|-10-[v0(30)]-10-[v1]-20-[v2]", views: clockView,timeContainer,infoContainer)
         addContraintsWithFormat(format: "V:|-30-[v0(30)]", views: clockView)
         addContraintsWithFormat(format: "V:|-30-[v0]", views: timeContainer)
         addContraintsWithFormat(format: "V:|-30-[v0]", views: infoContainer)
         
-        addContraintsWithFormat(format: "H:[v0(25)]-20-[v1(25)]-20-|", views: checkView,trashView)
-        addContraintsWithFormat(format: "V:|-30-[v0(25)]", views: checkView)
-        addContraintsWithFormat(format: "V:|-30-[v0(25)]", views: trashView)
+        addContraintsWithFormat(format: "H:[v0(25)]-20-[v1(25)]-20-|", views: checkBtn,trashBtn)
+        addContraintsWithFormat(format: "V:|-30-[v0(25)]", views: checkBtn)
+        addContraintsWithFormat(format: "V:|-30-[v0(25)]", views: trashBtn)
+        
+        // MARK: Button Actions
+        checkBtn.addTarget(self, action: #selector(completeTodo(_:)), for: .touchUpInside)
+        trashBtn.addTarget(self, action: #selector(deleteTodo(_:)), for: .touchUpInside)
+    }
+    
+    @objc func completeTodo(_: UIButton) {
+        delegate?.completeTodo(sender: self)
+    }
+    
+    @objc func deleteTodo(_: UIButton) {
+        delegate?.deleteTodo(sender: self)
     }
 }
 

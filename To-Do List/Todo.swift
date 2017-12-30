@@ -12,11 +12,13 @@ class Todo: Codable {
     var title: String
     var isComplete: Bool = false
     var dueDate: Date
+    var numOfHoursRequired: Int
     var notes: String?
     
-    init(title: String,dueDate: Date,notes: String?) {
+    init(title: String,dueDate: Date,numOfHoursRequired: Int,notes: String?) {
         self.title = title
         self.dueDate = dueDate
+        self.numOfHoursRequired = numOfHoursRequired
         self.notes = notes
     }
     
@@ -41,11 +43,11 @@ class Todo: Codable {
     
     static func loadSampleTodos() -> [Todo] {
         return [
-            Todo(title: "Contact Bern",dueDate: Date(), notes: "Talk about programming in Swift"),
-            Todo(title: "Research Swift Designs",dueDate: Date(), notes: "Find some inspiration!"),
-            Todo(title: "Daily Quote",dueDate: Date(), notes: "I am extraordinarily patient, provided I get my own way in the end.\n -Margaret Thatcher"),
-            Todo(title: "Find more projects to do",dueDate: Date(), notes: "I need more iOS projects."),
-            Todo(title: "UIStepper Designs",dueDate: Date(), notes: "Look up UIStepper designs to start")
+            Todo(title: "Contact Bern",dueDate: Date(),numOfHoursRequired: 8, notes: "Talk about programming in Swift"),
+            Todo(title: "Research Swift Designs",dueDate: Date(),numOfHoursRequired: 5, notes: "Find some inspiration!"),
+            Todo(title: "Daily Quote",dueDate: Date(),numOfHoursRequired: 10, notes: "I am extraordinarily patient, provided I get my own way in the end.\n -Margaret Thatcher"),
+            Todo(title: "Find more projects to do",dueDate: Date(),numOfHoursRequired: 2, notes: "I need more iOS projects."),
+            Todo(title: "UIStepper Designs",dueDate: Date(),numOfHoursRequired: 4, notes: "Look up UIStepper designs to start")
         ]
     }
     
