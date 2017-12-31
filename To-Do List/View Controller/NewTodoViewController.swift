@@ -22,7 +22,7 @@ class NewTodoTableViewController: UIViewController {
         let img = UIImageView()
         img.translatesAutoresizingMaskIntoConstraints = false
         img.tintColor = UIColor(rgb: 0x5C5C5C)
-        img.image = UIImage(named: "clock")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        img.image = UIImage(named: "glasses")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
         return img
     }()
     

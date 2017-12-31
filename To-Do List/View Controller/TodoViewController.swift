@@ -16,7 +16,6 @@ class TodoViewController: UIViewController {
     var todosDict = [String:String]()
     var numOfTaskDone = 0
     
-    var tableView: UITableView!
     var collectionView: UICollectionView!
     
     let backgroundColor = UIColor(rgb: 0x317FE0)
@@ -93,17 +92,6 @@ class TodoViewController: UIViewController {
         collectionView.register(TodoCollectionViewCell.self, forCellWithReuseIdentifier: cellIdForTableView)
         collectionView.backgroundColor = UIColor(rgb: 0xE6E6E6)
         self.view.addSubview(collectionView)
-        
-//        self.tableView = UITableView()
-//        self.tableView.translatesAutoresizingMaskIntoConstraints = false
-//        self.tableView.delegate = self
-//        self.tableView.dataSource = self
-//        self.tableView.backgroundColor = .clear
-//        self.tableView.register(TodoTableViewCell.self, forCellReuseIdentifier: cellIdForTableView)
-//        self.view.addSubview(tableView)
-//
-//        self.view.backgroundColor = backgroundColor
-        
         
         // Setup up calendarView
         
@@ -223,29 +211,6 @@ class TodoViewController: UIViewController {
     }
     
     // MARK: Protocol Functions
-    @objc func completeButtonTapped(sender: TodoTableViewCell) {
-        if let indexPath = tableView.indexPath(for: sender) {
-            let todo = todos[indexPath.row]
-            todo.isComplete = !todo.isComplete
-            todos[indexPath.row] = todo
-            tableView.reloadRows(at: [indexPath], with: .fade)
-            tableView.reloadData()
-        }
-        updateTaskCount()
-        Todo.saveTodos(todos)
-        tableView.reloadData()
-    }
-    
-    func deleteButtonTapped(sender: TodoTableViewCell) {
-        if let indexPath = tableView.indexPath(for: sender) {
-            todos.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
-            updateTaskCount()
-            tableView.reloadData()
-            Todo.saveTodos(todos)
-        }
-    }
-    
     func editButtonTapped(sender: TodoTableViewCell) {
         let dvc = EditTodoTableViewController()
         dvc.delegate = self
@@ -323,7 +288,7 @@ extension TodoViewController: NewTodoTableViewControllerProtocol, EditTodoTableV
     func addTodo(todo: Todo) {
         self.todos.append(todo)
         Todo.saveTodos(todos)
-        tableView.reloadData()
+        collectionView.reloadData()
     }
 }
 
@@ -401,11 +366,15 @@ extension TodoViewController: JTAppleCalendarViewDelegate, JTAppleCalendarViewDa
         formatter.dateFormat = "MM dd yyyy"
         let cellDateString = formatter.string(from: cellState.date)
         selectedTodos = [Todo]()
+        var i = 0;
         for todo in todos {
             let todoDateString = formatter.string(from: todo.dueDate)
             if todoDateString == cellDateString {
-                selectedTodos.append(todo)
+                let index = IndexPath(row: i, section: 0)
+                self.collectionView.scrollToItem(at: index, at: .top, animated: true)
+                break
             }
+            i += 1
         }
         configureCell(cell: cell, cellState: cellState)
         cell?.bounce()
