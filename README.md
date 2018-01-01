@@ -4,7 +4,7 @@
 
 **Updated Home Screen**
 
-<img src="https://github.com/QuestCode/To-Do-List/blob/master/To-Do%20List/images/interface_update.gif?raw=true" width="250">
+<img src="https://github.com/QuestCode/To-Do-List/blob/master/To-Do%20List/images/todo_latest.gif?raw=true" width="250">
 
 
 **Initial Home Screen**
