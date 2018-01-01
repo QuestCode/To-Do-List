@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2133A9E61FF1A26A0092D6CA /* todos.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2133A9E51FF1A26A0092D6CA /* todos.plist */; };
 		213CE9C11FF49E1100D968E3 /* EditTodoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 213CE9C01FF49E1100D968E3 /* EditTodoViewController.swift */; };
+		213F8E9A1FFAB70A0016FA8F /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 213F8E991FFAB70A0016FA8F /* Event.swift */; };
 		219261B31FEC6E5A00F09045 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219261B21FEC6E5A00F09045 /* AppDelegate.swift */; };
 		219261B51FEC6E5A00F09045 /* TodoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219261B41FEC6E5A00F09045 /* TodoViewController.swift */; };
 		219261BA1FEC6E5A00F09045 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 219261B91FEC6E5A00F09045 /* Assets.xcassets */; };
@@ -43,6 +44,7 @@
 /* Begin PBXFileReference section */
 		2133A9E51FF1A26A0092D6CA /* todos.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = todos.plist; sourceTree = "<group>"; };
 		213CE9C01FF49E1100D968E3 /* EditTodoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTodoViewController.swift; sourceTree = "<group>"; };
+		213F8E991FFAB70A0016FA8F /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		219261AF1FEC6E5A00F09045 /* To-Do List.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "To-Do List.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		219261B21FEC6E5A00F09045 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		219261B41FEC6E5A00F09045 /* TodoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoViewController.swift; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 				2133A9E51FF1A26A0092D6CA /* todos.plist */,
 				219261B21FEC6E5A00F09045 /* AppDelegate.swift */,
 				219261C81FEC71B300F09045 /* Todo.swift */,
+				213F8E991FFAB70A0016FA8F /* Event.swift */,
 				21B6A1341FF2CE00001185C9 /* HeaderView.swift */,
 				219261CA1FEC740000F09045 /* Extensions.swift */,
 				219261C41FEC713F00F09045 /* Cells */,
@@ -250,6 +253,7 @@
 				219261CE1FEC90F500F09045 /* NewTodoViewController.swift in Sources */,
 				21EE19A21FF3E685008BA53A /* JTAppleCalendarLayout.swift in Sources */,
 				213CE9C11FF49E1100D968E3 /* EditTodoViewController.swift in Sources */,
+				213F8E9A1FFAB70A0016FA8F /* Event.swift in Sources */,
 				21EE19931FF3E684008BA53A /* JTAppleCalendarView.swift in Sources */,
 				21EE19941FF3E684008BA53A /* UserInteractionFunctions.swift in Sources */,
 				219261CB1FEC740000F09045 /* Extensions.swift in Sources */,
