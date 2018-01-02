@@ -103,7 +103,7 @@ class NewTodoTableViewController: UIViewController {
     }()
     
     var todo: Todo? {
-        return Todo(title: titleTextField.text!, dueDate: dueDatePicker.date,numOfHoursRequired: Int(totalHoursTextField.text!)!, notes: descriptionTextView.text)
+        return Todo(title: titleTextField.text!, dueDate: dueDatePicker.date,numOfHoursRequired: Int(totalHoursTextField.text!)!, description: descriptionTextView.text)
     }
     
     override func viewDidLoad() {

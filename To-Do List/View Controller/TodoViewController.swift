@@ -352,7 +352,7 @@ extension TodoViewController: UICollectionViewDelegate, UICollectionViewDataSour
         let todo = selectedTodos.count != 0 ? selectedTodos[indexPath.row] : todos[indexPath.row]
         
         cell.titleLabel.text = todo.title
-        cell.notesLabel.text = todo.notes
+        cell.notesLabel.text = todo.description
         cell.endTimeLabel.text = formatter.string(from: todo.dueDate)
         cell.checkBtn.tintColor = todo.isComplete ? backgroundColor : UIColor.gray
         return cell
