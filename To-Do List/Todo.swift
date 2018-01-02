@@ -45,7 +45,7 @@ class Todo: Codable {
         return [
             Todo(title: "Contact Bern",dueDate: Date(),numOfHoursRequired: 8, description: "Talk about programming in Swift"),
             Todo(title: "Research Swift Designs",dueDate: Date(),numOfHoursRequired: 5, description: "Find some inspiration!"),
-            Todo(title: "Daily Quote",dueDate: Date(),numOfHoursRequired: 10, notes: "I am extraordinarily patient, provided I get my own way in the end.\n -Margaret Thatcher"),
+            Todo(title: "Daily Quote",dueDate: Date(),numOfHoursRequired: 10, description: "I am extraordinarily patient, provided I get my own way in the end.\n -Margaret Thatcher"),
             Todo(title: "Find more projects to do",dueDate: Date(),numOfHoursRequired: 2, description: "I need more iOS projects."),
             Todo(title: "UIStepper Designs",dueDate: Date(),numOfHoursRequired: 4, description: "Look up UIStepper designs to start")
         ]
