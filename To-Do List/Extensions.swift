@@ -97,4 +97,15 @@ extension Date {
         
         return end - start
     }
+    
+    init(month: Int, day: Int, year: Int) {
+        let gregorianCalendar = NSCalendar(calendarIdentifier: .gregorian)!
+        
+        var dateComponents = DateComponents()
+        dateComponents.month = month
+        dateComponents.day = day
+        dateComponents.year = year
+        
+        self = gregorianCalendar.date(from: dateComponents)!
+    }
 }

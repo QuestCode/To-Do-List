@@ -12,8 +12,9 @@ class TodoViewController: UIViewController {
 
     let cellIdForTableView = "todoCell"
     var todos = [Todo]()
+    var events = [Event]()
     var selectedTodos = [Todo]()
-    var todosDict = [String:String]()
+    var eventsDict = [String:String]()
     var numOfTaskDone = 0
     
     var collectionView: UICollectionView!
@@ -72,9 +73,11 @@ class TodoViewController: UIViewController {
         if let savedTodos = Todo.loadTodos() {
             todos = savedTodos
             todos.sort{ $0.dueDate < $1.dueDate }
+            createEventsFrom(todos: todos)
         } else {
             todos = Todo.loadSampleTodos()
             todos.sort{ $0.dueDate < $1.dueDate }
+            createEventsFrom(todos: todos)
         }
         updateTaskCount()
         setupTableView()
@@ -225,7 +228,7 @@ class TodoViewController: UIViewController {
     }
     
     func handleCellEvents(cell: CustomCalendarCell, cellState: CellState) {
-        cell.eventDotView.isHidden = !todosDict.contains { $0.key == formatter.string(from: cellState.date) }
+        cell.eventDotView.isHidden = !eventsDict.contains { $0.key == formatter.string(from: cellState.date) }
     }
     
     
@@ -265,10 +268,10 @@ class TodoViewController: UIViewController {
     
     func formatTodosDict() {
         DispatchQueue.global().asyncAfter(deadline: .now()) {
-            let todoObjects = self.createTodosDict()
-            for (date, event) in todoObjects {
+            let eventObjects = self.createEventsDict()
+            for (date, event) in eventObjects {
                 let stringDate = self.formatter.string(from: date)
-                self.todosDict[stringDate] = event
+                self.eventsDict[stringDate] = event
             }
         }
         
@@ -277,13 +280,13 @@ class TodoViewController: UIViewController {
         }
     }
     
-    func createTodosDict() -> [Date:String] {
-        formatter.dateFormat = "MM dd yyyy"
-        
+    func createEventsDict() -> [Date:String] {
+        self.formatter.dateFormat = "MM dd yyyy"
         var dict = [Date:String]()
         
-        for todo in todos {
-            dict[todo.dueDate] =  todo.title
+        for event in events {
+            dict[event.startDate] =  event.title
+            print(self.formatter.string(from:event.startDate))
         }
         return dict
     }
@@ -295,24 +298,26 @@ class TodoViewController: UIViewController {
 extension TodoViewController: NewTodoTableViewControllerProtocol, EditTodoTableViewControllerProtocol, TodoCollectionViewCellProtocol {
     func deleteTodo(sender: TodoCollectionViewCell) {
         if let indexPath = collectionView.indexPath(for: sender) {
-            todos.remove(at: indexPath.row)
+            events.remove(at: indexPath.row)
             collectionView.deleteItems(at: [indexPath])
             updateTaskCount()
             Todo.saveTodos(todos)
+            Event.saveEvents(events)
             collectionView.reloadData()
         }
     }
     
     @objc func completeTodo(sender: TodoCollectionViewCell) {
         if let indexPath = collectionView.indexPath(for: sender) {
-            let todo = todos[indexPath.row]
-            todo.isComplete = !todo.isComplete
-            todos[indexPath.row] = todo
+            let event = events[indexPath.row]
+            event.isComplete = !event.isComplete
+            events[indexPath.row] = event
             collectionView.reloadItems(at: [indexPath])
             collectionView.reloadData()
         }
         updateTaskCount()
         Todo.saveTodos(todos)
+        Event.saveEvents(events)
         collectionView.reloadData()
     }
     
@@ -322,15 +327,23 @@ extension TodoViewController: NewTodoTableViewControllerProtocol, EditTodoTableV
     
     func addTodo(todo: Todo) {
         self.todos.append(todo)
+        createEventsFrom(todos: self.todos)
         Todo.saveTodos(todos)
+        Event.saveEvents(events)
         collectionView.reloadData()
+    }
+    
+    func createEventsFrom(todos: [Todo]) {
+        for todo in todos {
+            self.events = Event.createEventsForTodo(todo: todo)
+        }
     }
 }
 
 extension TodoViewController: UICollectionViewDelegate, UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return selectedTodos.count != 0 ? selectedTodos.count : todos.count
+        return events.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -349,12 +362,13 @@ extension TodoViewController: UICollectionViewDelegate, UICollectionViewDataSour
         
         formatter.dateFormat = "hh:mm a"
         
-        let todo = selectedTodos.count != 0 ? selectedTodos[indexPath.row] : todos[indexPath.row]
+        let event = events[indexPath.row]
         
-        cell.titleLabel.text = todo.title
-        cell.notesLabel.text = todo.description
-        cell.endTimeLabel.text = formatter.string(from: todo.dueDate)
-        cell.checkBtn.tintColor = todo.isComplete ? backgroundColor : UIColor.gray
+        cell.titleLabel.text = event.title
+        cell.notesLabel.text = event.description
+        cell.startTimeLabel.text = formatter.string(from: event.startDate)
+        cell.endTimeLabel.text = formatter.string(from: event.endDate)
+        cell.checkBtn.tintColor = event.isComplete ? backgroundColor : UIColor.gray
         return cell
     }
     
@@ -402,8 +416,8 @@ extension TodoViewController: JTAppleCalendarViewDelegate, JTAppleCalendarViewDa
         let cellDateString = formatter.string(from: cellState.date)
         selectedTodos = [Todo]()
         var i = 0;
-        for todo in todos {
-            let todoDateString = formatter.string(from: todo.dueDate)
+        for event in events {
+            let todoDateString = formatter.string(from: event.startDate)
             if todoDateString == cellDateString {
                 let index = IndexPath(row: i, section: 0)
                 self.collectionView.scrollToItem(at: index, at: .top, animated: true)
