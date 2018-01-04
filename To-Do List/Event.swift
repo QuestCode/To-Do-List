@@ -28,8 +28,8 @@ class Event {
     static func saveEvents(_ events: [Event]) {
         let propertyListEncoder = PropertyListEncoder()
         do {
-            let codedTodos = try? propertyListEncoder.encode(events)
-            try codedTodos?.write(to: archiveURL, options: .noFileProtection)
+            let codedEvents = try? propertyListEncoder.encode(events)
+            try codedEvents?.write(to: archiveURL, options: .noFileProtection)
         } catch {
             print("Writing file failed with error : \(error)")
         }
@@ -59,10 +59,10 @@ class Event {
         if numOfHoursADay >= 2 {
             while i < daysUntilDue {
                 let startTime = calendar.date(from: dateComponents)
-                dateComponents.day = dateComponents.day! + 1
                 dateComponents.hour = dateComponents.hour! + 2
                 let endTime = calendar.date(from: dateComponents)
                 events.append(Event(title: todo.title, description: todo.description!, startDate: startTime!, endDate: endTime!))
+                dateComponents.day = dateComponents.day! + 1
                 dateComponents.hour = 17
                 dateComponents.minute = 0
                 i *= numOfHoursADay

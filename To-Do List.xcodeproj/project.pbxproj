@@ -19,6 +19,7 @@
 		219261CB1FEC740000F09045 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219261CA1FEC740000F09045 /* Extensions.swift */; };
 		219261CE1FEC90F500F09045 /* NewTodoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219261CD1FEC90F500F09045 /* NewTodoViewController.swift */; };
 		21B6A1351FF2CE00001185C9 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B6A1341FF2CE00001185C9 /* HeaderView.swift */; };
+		21E331881FFEF3870091FAD8 /* events.plist in Resources */ = {isa = PBXBuildFile; fileRef = 21E331871FFEF3870091FAD8 /* events.plist */; };
 		21EE19931FF3E684008BA53A /* JTAppleCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EE19811FF3E684008BA53A /* JTAppleCalendarView.swift */; };
 		21EE19941FF3E684008BA53A /* UserInteractionFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EE19821FF3E684008BA53A /* UserInteractionFunctions.swift */; };
 		21EE19951FF3E684008BA53A /* Info-iOS.plist in Resources */ = {isa = PBXBuildFile; fileRef = 21EE19831FF3E684008BA53A /* Info-iOS.plist */; };
@@ -56,6 +57,7 @@
 		219261CA1FEC740000F09045 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		219261CD1FEC90F500F09045 /* NewTodoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTodoViewController.swift; sourceTree = "<group>"; };
 		21B6A1341FF2CE00001185C9 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
+		21E331871FFEF3870091FAD8 /* events.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = events.plist; sourceTree = "<group>"; };
 		21EE19811FF3E684008BA53A /* JTAppleCalendarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JTAppleCalendarView.swift; sourceTree = "<group>"; };
 		21EE19821FF3E684008BA53A /* UserInteractionFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInteractionFunctions.swift; sourceTree = "<group>"; };
 		21EE19831FF3E684008BA53A /* Info-iOS.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-iOS.plist"; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 			children = (
 				21EE19801FF3E684008BA53A /* Sources */,
 				2133A9E51FF1A26A0092D6CA /* todos.plist */,
+				21E331871FFEF3870091FAD8 /* events.plist */,
 				219261B21FEC6E5A00F09045 /* AppDelegate.swift */,
 				219261C81FEC71B300F09045 /* Todo.swift */,
 				213F8E991FFAB70A0016FA8F /* Event.swift */,
@@ -233,6 +236,7 @@
 				219261BD1FEC6E5A00F09045 /* LaunchScreen.storyboard in Resources */,
 				219261BA1FEC6E5A00F09045 /* Assets.xcassets in Resources */,
 				2133A9E61FF1A26A0092D6CA /* todos.plist in Resources */,
+				21E331881FFEF3870091FAD8 /* events.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
