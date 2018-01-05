@@ -64,7 +64,13 @@ class TodoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        self.title = "To-Do List"
+        let titleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: view.frame.width - 140, height: view.frame.height))
+        titleLabel.text = "Calendar Events"
+        titleLabel.textColor = UIColor.white
+        titleLabel.font = UIFont(name: "AppleSDGothicNeo-Regular", size: 25)
+        navigationItem.titleView = titleLabel
+        
+        
         // This is to remove view underneath navigation bar
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action:  #selector(addNewTodo(_:)))
         self.view.backgroundColor = backgroundColor
@@ -93,7 +99,7 @@ class TodoViewController: UIViewController {
         
         // Do any additional setup after loading the view, typically from a nib.
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: view.frame.width - 30, height: 90)
+        layout.itemSize = CGSize(width: view.frame.width - 30, height: 80)
         
         collectionView = UICollectionView(frame: self.view.frame, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -286,7 +292,6 @@ class TodoViewController: UIViewController {
         
         for event in events {
             dict[event.startDate] =  event.title
-            print(self.formatter.string(from:event.startDate))
         }
         return dict
     }

@@ -103,14 +103,14 @@ class TodoCollectionViewCell: UICollectionViewCell {
         addSubview(trashBtn)
         addSubview(checkBtn)
         
-        addContraintsWithFormat(format: "H:|-10-[v0(30)]-10-[v1]-20-[v2]", views: clockView,timeContainer,infoContainer)
-        addContraintsWithFormat(format: "V:|-30-[v0(30)]", views: clockView)
+        addContraintsWithFormat(format: "H:|-10-[v0(25)]-10-[v1]-20-[v2]", views: clockView,timeContainer,infoContainer)
+        addContraintsWithFormat(format: "V:|-30-[v0(25)]", views: clockView)
         addContraintsWithFormat(format: "V:|-30-[v0]", views: timeContainer)
-        addContraintsWithFormat(format: "V:|-30-[v0]", views: infoContainer)
+        addContraintsWithFormat(format: "V:|-25-[v0]", views: infoContainer)
         
-        addContraintsWithFormat(format: "H:[v0(25)]-20-[v1(25)]-20-|", views: checkBtn,trashBtn)
-        addContraintsWithFormat(format: "V:|-30-[v0(25)]", views: checkBtn)
-        addContraintsWithFormat(format: "V:|-30-[v0(25)]", views: trashBtn)
+        addContraintsWithFormat(format: "H:[v0(20)]-20-[v1(20)]-20-|", views: checkBtn,trashBtn)
+        addContraintsWithFormat(format: "V:|-30-[v0(20)]", views: checkBtn)
+        addContraintsWithFormat(format: "V:|-30-[v0(20)]", views: trashBtn)
         
         // MARK: Button Actions
         checkBtn.addTarget(self, action: #selector(completeTodo(_:)), for: .touchUpInside)
