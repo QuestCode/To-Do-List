@@ -76,14 +76,18 @@ class TodoViewController: UIViewController {
         self.view.backgroundColor = backgroundColor
         self.navigationController?.navigationBar.isTranslucent = false
         
-        if let savedTodos = Todo.loadTodos() {
-            todos = savedTodos
-            todos.sort{ $0.dueDate < $1.dueDate }
-            createEventsFrom(todos: todos)
+        if let savedEvents = Event.loadEvents() {
+            events = savedEvents
+            print(events)
         } else {
-            todos = Todo.loadSampleTodos()
-            todos.sort{ $0.dueDate < $1.dueDate }
-            createEventsFrom(todos: todos)
+            if let savedTodos = Todo.loadTodos() {
+                todos = savedTodos
+                todos.sort{ $0.dueDate < $1.dueDate }
+            } else {
+                todos = Todo.loadSampleTodos()
+                todos.sort{ $0.dueDate < $1.dueDate }
+                createEventsFrom(todos: todos)
+            }
         }
         updateTaskCount()
         setupTableView()

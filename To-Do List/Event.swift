@@ -35,6 +35,12 @@ class Event: Codable  {
         }
     }
     
+    static func loadEvents() -> [Event]? {
+        guard let codedEvents = try? Data(contentsOf: archiveURL) else { return nil }
+        let propertyListDecoder = PropertyListDecoder()
+        return try? propertyListDecoder.decode(Array<Event>.self, from: codedEvents)
+    }
+    
     public static func createEventsForTodo(todo: Todo) -> [Event] {
         var events = [Event]()
         let daysUntilDue = todo.dueDate.interval(ofComponent: .day, fromDate: Date())
@@ -50,6 +56,8 @@ class Event: Codable  {
         dateComponents.timeZone = TimeZone(abbreviation: "PST")
         dateComponents.hour = 17
         dateComponents.minute = 0
+        
+        
         
 //        // This is to check the calucation of the muber of hours
 //        print(daysUntilDue)
