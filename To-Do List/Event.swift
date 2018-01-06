@@ -45,12 +45,10 @@ class Event: Codable  {
         var events = createNormalDailyEvents()
         let daysUntilDue = todo.dueDate.interval(ofComponent: .day, fromDate: Date())
         
-        var numOfHoursADay = 0
+        var numOfHoursADay = daysUntilDue/todo.numOfHoursRequired
         
-        if daysUntilDue > 7 {
-           numOfHoursADay = daysUntilDue/7
-        } else {
-            numOfHoursADay = daysUntilDue/todo.numOfHoursRequired
+        if numOfHoursADay != 2 {
+           numOfHoursADay = 2
         }
         
         // Gather intervals
@@ -68,20 +66,31 @@ class Event: Codable  {
         
         // Create events until reach total work time
         var i = 1
-        while i < daysUntilDue {
+        var day = 0
+        while i < todo.numOfHoursRequired {
+            let calendar = Calendar.current
             // Find a start time that is available
             for j in 0..<intervals.count {
                 // Calculate the time the event needs
                 let neededInterval = numOfHoursADay * 60
                 let interval = intervals[j]
                 if neededInterval <= interval {
-                    let startTime = events[j].endDate
+                    var startTime = events[j].endDate
+                    var dateComponents = DateComponents()
+                    dateComponents.year = calendar.component(.year, from: startTime)
+                    dateComponents.month = calendar.component(.month, from: startTime)
+                    dateComponents.day = calendar.component(.day, from: startTime) + day
+                    dateComponents.hour = calendar.component(.hour, from: startTime)
+                    dateComponents.minute = calendar.component(.minute, from: startTime)
+                    dateComponents.timeZone = TimeZone(abbreviation: "PST")
+                    startTime = calendar.date(from: dateComponents)!
                     let event = Event(title: todo.title, description: todo.description!, startDate: startTime, endDate: startTime.addingTimeInterval(TimeInterval(neededInterval*60)))
                     events.append(event)
                     break
                 }
             }
             i *= numOfHoursADay
+            day += 1
         }
         return events
     }
@@ -118,11 +127,11 @@ class Event: Codable  {
             // Lunch event
             events.append(Event(title: "Lunch", description: "Eat your lunch", startDate:lunchStartTime, endDate: lunchEndTime))
             
-            dateComponents.hour = 11
+            dateComponents.hour = 18
             dateComponents.minute = 30
             let dinnerStartTime = calendar.date(from: dateComponents)!
             
-            dateComponents.hour = 12
+            dateComponents.hour = 19
             dateComponents.minute = 30
             let dinnerEndTime = calendar.date(from: dateComponents)!
             

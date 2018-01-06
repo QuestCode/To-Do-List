@@ -346,6 +346,7 @@ extension TodoViewController: NewTodoTableViewControllerProtocol, EditTodoTableV
                 self.events = Event.createEventsForTodo(todo: todo)
             }
         }
+        self.events.sort{ $0.startDate < $1.startDate }
         Event.saveEvents(self.events)
     }
 }
