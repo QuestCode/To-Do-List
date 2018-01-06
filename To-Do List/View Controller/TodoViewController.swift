@@ -36,16 +36,7 @@ class TodoViewController: UIViewController {
         return view
     }()
     
-    let monthLabel:  UILabel = {
-        let lbl = UILabel()
-        lbl.translatesAutoresizingMaskIntoConstraints = false
-        lbl.font = UIFont(name: lbl.font.fontName, size: 20)
-        lbl.textColor = .white
-        lbl.textAlignment = .center
-        return lbl
-    }()
-    
-    let yearLabel:  UILabel = {
+    let monthYearLabel:  UILabel = {
         let lbl = UILabel()
         lbl.translatesAutoresizingMaskIntoConstraints = false
         lbl.font = UIFont(name: lbl.font.fontName, size: 20)
@@ -135,12 +126,9 @@ class TodoViewController: UIViewController {
         // This is used to labels to present the months and year
         self.calendarView.visibleDates() { (visibleDates) in
             let date = visibleDates.monthDates.first!.date
+            self.formatter.dateFormat = "MMMM yyyy"
+            self.monthYearLabel.text = self.formatter.string(from: date)
             
-            self.formatter.dateFormat = "MMMM"
-            self.monthLabel.text = self.formatter.string(from: date)
-            
-            self.formatter.dateFormat = "yyyy"
-            self.yearLabel.text = self.formatter.string(from: date)
         }
         
         setupDaysView()
@@ -195,13 +183,11 @@ class TodoViewController: UIViewController {
         nextButton.setImage(UIImage(named: "forward_arrow")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate), for: .normal)
         nextButton.addTarget(self, action: #selector(nextMonth(_:)), for: .touchUpInside)
         monthYearView.addSubview(nextButton)
-        monthYearView.addSubview(monthLabel)
-        monthYearView.addSubview(yearLabel)
+        monthYearView.addSubview(monthYearLabel)
         
-        monthYearView.addContraintsWithFormat(format: "H:|-60-[v0]-5-[v1]-5-[v2]-5-[v3]-60-|", views: backButton,monthLabel,yearLabel,nextButton)
+        monthYearView.addContraintsWithFormat(format: "H:|-30-[v0(30)]-5-[v1]-5-[v2]-30-|", views: backButton,monthYearLabel,nextButton)
         monthYearView.addContraintsWithFormat(format: "V:|[v0]|", views: backButton)
-        monthYearView.addContraintsWithFormat(format: "V:|[v0]|", views: monthLabel)
-        monthYearView.addContraintsWithFormat(format: "V:|[v0]|", views: yearLabel)
+        monthYearView.addContraintsWithFormat(format: "V:|[v0]|", views: monthYearLabel)
         monthYearView.addContraintsWithFormat(format: "V:|[v0]|", views: nextButton)
         
     }
@@ -415,11 +401,8 @@ extension TodoViewController: JTAppleCalendarViewDelegate, JTAppleCalendarViewDa
     func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentWith visibleDates: DateSegmentInfo) {
         let date = visibleDates.monthDates.first!.date
         
-        self.formatter.dateFormat = "MMMM"
-        self.monthLabel.text = formatter.string(from: date)
-        
-        self.formatter.dateFormat = "yyyy"
-        self.yearLabel.text = self.formatter.string(from: date)
+        self.formatter.dateFormat = "MMMM yyyy"
+        self.monthYearLabel.text = formatter.string(from: date)
     }
     
     func calendar(_ calendar: JTAppleCalendarView, didSelectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
