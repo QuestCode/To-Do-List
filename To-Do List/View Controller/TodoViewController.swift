@@ -71,7 +71,9 @@ class TodoViewController: UIViewController {
         navigationItem.titleView = titleLabel
         
         
-        // This is to remove view underneath navigation bar
+        // This is to customize the navigation bar
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action:  #selector(addNewTodo(_:)))
         self.view.backgroundColor = backgroundColor
         self.navigationController?.navigationBar.isTranslucent = false

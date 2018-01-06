@@ -53,7 +53,7 @@ class Event: Codable  {
         dateComponents.month = calendar.component(.month, from: Date())
         dateComponents.day = calendar.component(.day, from: Date())
         dateComponents.timeZone = TimeZone(abbreviation: "PST")
-        
+        dateComponents.hour = 7
         
         
 //        // This is to check the calucation of the muber of hours
@@ -64,21 +64,20 @@ class Event: Codable  {
         if numOfHoursADay >= 2 {
             var i = 1
             while i < daysUntilDue {
-                let startTime = calendar.date(from: dateComponents)
+                let startTime = findOpeningInCalendar(testDate: calendar.date(from: dateComponents)!)
                 dateComponents.hour = dateComponents.hour! + 2
-                let endTime = calendar.date(from: dateComponents)
-                events.append(Event(title: todo.title, description: todo.description!, startDate: startTime!, endDate: endTime!))
+                let endTime = findOpeningInCalendar(testDate: calendar.date(from: dateComponents)!)
+                events.append(Event(title: todo.title, description: todo.description!, startDate: startTime, endDate: endTime))
                 dateComponents.day = dateComponents.day! + 1
-                dateComponents.hour = 17
-                dateComponents.minute = 0
+                dateComponents.hour = 7
                 i *= numOfHoursADay
             }
         } else {
-            let startTime = calendar.date(from: dateComponents)
+            let startTime = findOpeningInCalendar(testDate: calendar.date(from: dateComponents)!)
             dateComponents.day = dateComponents.day! + 1
             dateComponents.hour = dateComponents.hour! + 2
-            let endTime = calendar.date(from: dateComponents)
-            events.append(Event(title: todo.title, description: todo.description!, startDate: startTime!, endDate: endTime!))
+            let endTime = findOpeningInCalendar(testDate: calendar.date(from: dateComponents)!)
+            events.append(Event(title: todo.title, description: todo.description!, startDate: startTime, endDate: endTime))
         }
         return events
     }
@@ -117,6 +116,7 @@ private func findOpeningInCalendar(testDate: Date) -> Date {
             dateComponents.hour = hour
             date = calendar.date(from: dateComponents)
             dateString = formatter.string(from: date!)
+            break
 //            if testStringDate == dateString {
 //                // Increment minutes
 //                if minute != 30 {
