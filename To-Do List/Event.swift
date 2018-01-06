@@ -45,7 +45,6 @@ class Event: Codable  {
         var events = [Event]()
         let daysUntilDue = todo.dueDate.interval(ofComponent: .day, fromDate: Date())
         let numOfHoursADay = daysUntilDue/todo.numOfHoursRequired
-        var i = 1
        
         let calendar = Calendar.current
         
@@ -54,8 +53,6 @@ class Event: Codable  {
         dateComponents.month = calendar.component(.month, from: Date())
         dateComponents.day = calendar.component(.day, from: Date())
         dateComponents.timeZone = TimeZone(abbreviation: "PST")
-        dateComponents.hour = 17
-        dateComponents.minute = 0
         
         
         
@@ -65,6 +62,7 @@ class Event: Codable  {
         
         // Create date from components
         if numOfHoursADay >= 2 {
+            var i = 1
             while i < daysUntilDue {
                 let startTime = calendar.date(from: dateComponents)
                 dateComponents.hour = dateComponents.hour! + 2
@@ -84,4 +82,49 @@ class Event: Codable  {
         }
         return events
     }
+}
+
+
+
+private func findOpeningInCalendar(testDate: Date) -> Date {
+    // Create date in calendar
+    let calendar = Calendar.current
+    
+    // Components for neccessary date
+    var dateComponents = DateComponents()
+    dateComponents.year = calendar.component(.year, from: Date())
+    dateComponents.month = calendar.component(.month, from: Date())
+    dateComponents.day = calendar.component(.day, from: Date())
+    dateComponents.timeZone = TimeZone(abbreviation: "PST")
+    
+    // Formatter to compare dates
+    let formatter = DateFormatter()
+    
+    let testStringDate = formatter.string(from: testDate)
+    
+    var hour = 7
+//    var minute = 0
+    dateComponents.hour = hour
+//    dateComponents.minute = minute
+    var date = calendar.date(from: dateComponents)
+    var dateString = formatter.string(from: date!)
+    
+    // Compare dates to see if the initial date is taken
+    if testStringDate == dateString {
+        // Find date by hour
+        while hour != 23 {
+            hour += 1
+            dateComponents.hour = hour
+            date = calendar.date(from: dateComponents)
+            dateString = formatter.string(from: date!)
+//            if testStringDate == dateString {
+//                // Increment minutes
+//                if minute != 30 {
+//                    minute += 30
+//                }
+//            }
+            
+        }
+    }
+    return Date()
 }
