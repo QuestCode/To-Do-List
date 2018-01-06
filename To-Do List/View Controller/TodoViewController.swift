@@ -69,19 +69,24 @@ class TodoViewController: UIViewController {
         self.view.backgroundColor = backgroundColor
         self.navigationController?.navigationBar.isTranslucent = false
         
-        if let savedEvents = Event.loadEvents() {
-            events = savedEvents
-            print(events)
-        } else {
+//        if let savedEvents = Event.loadEvents() {
+//            events = savedEvents
+//            print(events)
+//        } else {
             if let savedTodos = Todo.loadTodos() {
                 todos = savedTodos
                 todos.sort{ $0.dueDate < $1.dueDate }
+                createEventsFrom(todos: todos)
+                let event = events[0]
+                let eventInterval = event.endDate.interval(ofComponent: .minute, fromDate: event.startDate)
+                print(eventInterval)
+//                print(events)
             } else {
                 todos = Todo.loadSampleTodos()
                 todos.sort{ $0.dueDate < $1.dueDate }
                 createEventsFrom(todos: todos)
             }
-        }
+//        }
         updateTaskCount()
         setupTableView()
     }
@@ -331,9 +336,14 @@ extension TodoViewController: NewTodoTableViewControllerProtocol, EditTodoTableV
     }
     
     func createEventsFrom(todos: [Todo]) {
-        for todo in todos {
-            self.events = Event.createEventsForTodo(todo: todo)
+        if todos.count == 0 {
+            self.events = Event.createNormalDailyEvents()
+        } else {
+            for todo in todos {
+                self.events = Event.createEventsForTodo(todo: todo)
+            }
         }
+        Event.saveEvents(self.events)
     }
 }
 
