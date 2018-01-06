@@ -56,22 +56,29 @@ class Event: Codable  {
         // Gather intervals
         var intervals = [Int]()
         for i in 0..<events.count {
-            let eventInterval = events[i].endDate.interval(ofComponent: .minute, fromDate: events[i].startDate)
-            intervals.append(eventInterval)
+            if i != 0 {
+                let eventInterval = events[i].startDate.interval(ofComponent: .minute, fromDate: events[i-1].endDate)
+                intervals.append(eventInterval)
+            } else {
+                let eventInterval = events[i].endDate.interval(ofComponent: .minute, fromDate: events[i].startDate)
+                intervals.append(eventInterval)
+            }
         }
+        
         
         // Create events until reach total work time
         var i = 1
         while i < daysUntilDue {
             // Find a start time that is available
-            for j in 0..<events.count {
+            for j in 0..<intervals.count {
                 // Calculate the time the event needs
                 let neededInterval = numOfHoursADay * 60
-                if neededInterval <= intervals[j] {
-                    // Debugging
-                    print(neededInterval)
+                let interval = intervals[j]
+                if neededInterval <= interval {
                     let startTime = events[j].endDate
-                    events.append(Event(title: todo.title, description: todo.description!, startDate: startTime, endDate: startTime.addingTimeInterval(TimeInterval(neededInterval))))
+                    let event = Event(title: todo.title, description: todo.description!, startDate: startTime, endDate: startTime.addingTimeInterval(TimeInterval(neededInterval*60)))
+                    events.append(event)
+                    break
                 }
             }
             i *= numOfHoursADay

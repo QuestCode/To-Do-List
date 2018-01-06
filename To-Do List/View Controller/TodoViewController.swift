@@ -77,9 +77,6 @@ class TodoViewController: UIViewController {
                 todos = savedTodos
                 todos.sort{ $0.dueDate < $1.dueDate }
                 createEventsFrom(todos: todos)
-                let event = events[0]
-                let eventInterval = event.endDate.interval(ofComponent: .minute, fromDate: event.startDate)
-                print(eventInterval)
 //                print(events)
             } else {
                 todos = Todo.loadSampleTodos()
@@ -87,6 +84,12 @@ class TodoViewController: UIViewController {
                 createEventsFrom(todos: todos)
             }
 //        }
+        
+        for i in 0..<events.count {
+            if events[i].title == "Baby Shower" {
+                print(i)
+            }
+        }
         updateTaskCount()
         setupTableView()
     }
