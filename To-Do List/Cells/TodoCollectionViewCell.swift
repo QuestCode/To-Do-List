@@ -7,14 +7,14 @@
 //
 
 import UIKit
-protocol TodoCollectionViewCellProtocol {
-    func deleteTodo(sender: TodoCollectionViewCell)
-    func completeTodo(sender: TodoCollectionViewCell)
+protocol EventCollectionViewCellProtocol {
+    func deleteTodo(sender: EventCollectionViewCell)
+    func completeTodo(sender: EventCollectionViewCell)
 }
 
-class TodoCollectionViewCell: UICollectionViewCell {
+class EventCollectionViewCell: UICollectionViewCell {
     
-    var delegate: TodoCollectionViewCellProtocol?
+    var delegate: EventCollectionViewCellProtocol?
     
     var clockView: UIImageView = {
         let imageView = UIImageView()

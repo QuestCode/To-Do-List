@@ -105,7 +105,7 @@ class TodoViewController: UIViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.dataSource = self
         collectionView.delegate = self
-        collectionView.register(TodoCollectionViewCell.self, forCellWithReuseIdentifier: cellIdForTableView)
+        collectionView.register(EventCollectionViewCell.self, forCellWithReuseIdentifier: cellIdForTableView)
         collectionView.backgroundColor = UIColor(rgb: 0xE6E6E6)
         self.view.addSubview(collectionView)
         
@@ -295,8 +295,8 @@ class TodoViewController: UIViewController {
 
 // MARK: Edit and Add Protocols
 
-extension TodoViewController: NewTodoTableViewControllerProtocol, EditTodoTableViewControllerProtocol, TodoCollectionViewCellProtocol {
-    func deleteTodo(sender: TodoCollectionViewCell) {
+extension TodoViewController: NewTodoTableViewControllerProtocol, EditTodoTableViewControllerProtocol, EventCollectionViewCellProtocol {
+    func deleteTodo(sender: EventCollectionViewCell) {
         if let indexPath = collectionView.indexPath(for: sender) {
             events.remove(at: indexPath.row)
             collectionView.deleteItems(at: [indexPath])
@@ -307,7 +307,7 @@ extension TodoViewController: NewTodoTableViewControllerProtocol, EditTodoTableV
         }
     }
     
-    @objc func completeTodo(sender: TodoCollectionViewCell) {
+    @objc func completeTodo(sender: EventCollectionViewCell) {
         if let indexPath = collectionView.indexPath(for: sender) {
             let event = events[indexPath.row]
             event.isComplete = !event.isComplete
@@ -353,10 +353,9 @@ extension TodoViewController: UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdForTableView, for: indexPath) as! TodoCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdForTableView, for: indexPath) as! EventCollectionViewCell
         cell.backgroundColor = .white
-        cell.layer.borderWidth = 1.0
-        cell.layer.borderColor = UIColor.lightGray.cgColor
+        cell.layer.borderWidth = 1.3
         cell.layer.cornerRadius = 5
         cell.layer.masksToBounds = true
         cell.layer.shadowColor = UIColor.black.cgColor
@@ -370,6 +369,7 @@ extension TodoViewController: UICollectionViewDelegate, UICollectionViewDataSour
         
         let event = events[indexPath.row]
         
+        cell.layer.borderColor = event.regularEvent ?  UIColor.gray.cgColor : backgroundColor.cgColor
         cell.titleLabel.text = event.title
         cell.notesLabel.text = event.description
         cell.startTimeLabel.text = formatter.string(from: event.startDate)

@@ -14,6 +14,7 @@ class Event: Codable  {
     var startDate: Date
     var endDate: Date
     var isComplete: Bool = false
+    var regularEvent:Bool = false
     
     public init(title: String,description: String, startDate: Date, endDate: Date) {
         self.title = title
@@ -119,7 +120,9 @@ class Event: Codable  {
             let breakfastEndTime = calendar.date(from: dateComponents)!
             
             // Breakfast event
-            events.append(Event(title: "Breakfast", description: "Eat a good breakfast", startDate:breakfastStartTime, endDate: breakfastEndTime))
+            let breakfast = Event(title: "Breakfast", description: "Eat a good breakfast", startDate:breakfastStartTime, endDate: breakfastEndTime)
+            breakfast.regularEvent = true
+            events.append(breakfast)
             
             dateComponents.hour = 11
             dateComponents.minute = 30
@@ -130,7 +133,9 @@ class Event: Codable  {
             let lunchEndTime = calendar.date(from: dateComponents)!
             
             // Lunch event
-            events.append(Event(title: "Lunch", description: "Eat your lunch", startDate:lunchStartTime, endDate: lunchEndTime))
+            let lunch = Event(title: "Lunch", description: "Eat your lunch", startDate:lunchStartTime, endDate: lunchEndTime)
+            lunch.regularEvent = true
+            events.append(lunch)
             
             dateComponents.hour = 18
             dateComponents.minute = 30
@@ -141,7 +146,9 @@ class Event: Codable  {
             let dinnerEndTime = calendar.date(from: dateComponents)!
             
             // Dinner event
-            events.append(Event(title: "Dinner", description: "Eat your dinner", startDate:dinnerStartTime, endDate: dinnerEndTime))
+            let dinner = Event(title: "Dinner", description: "Eat your dinner", startDate:dinnerStartTime, endDate: dinnerEndTime)
+            dinner.regularEvent = true
+            events.append(dinner)
         }
         
         return events
