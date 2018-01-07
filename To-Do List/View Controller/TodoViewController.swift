@@ -85,11 +85,6 @@ class TodoViewController: UIViewController {
             }
 //        }
         
-        for i in 0..<events.count {
-            if events[i].title == "Baby Shower" {
-                print(i)
-            }
-        }
         updateTaskCount()
         setupTableView()
     }
@@ -343,7 +338,7 @@ extension TodoViewController: NewTodoTableViewControllerProtocol, EditTodoTableV
             self.events = Event.createNormalDailyEvents()
         } else {
             for todo in todos {
-                self.events = Event.createEventsForTodo(todo: todo)
+                self.events = Event.createEventsForTodo(todo: todo,events: self.events)
             }
         }
         self.events.sort{ $0.startDate < $1.startDate }

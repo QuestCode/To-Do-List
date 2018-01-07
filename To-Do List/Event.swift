@@ -41,26 +41,30 @@ class Event: Codable  {
         return try? propertyListDecoder.decode(Array<Event>.self, from: codedEvents)
     }
     
-    public static func createEventsForTodo(todo: Todo) -> [Event] {
-        var events = createNormalDailyEvents()
+    public static func createEventsForTodo(todo: Todo,events: [Event]) -> [Event] {
+        var sampleEvents = [Event]()
+        if events.count == 0 {
+            sampleEvents = createNormalDailyEvents()
+        } else {
+            sampleEvents = events
+        }
+        
+        sampleEvents.sort{ $0.startDate < $1.startDate }
+        
         let daysUntilDue = todo.dueDate.interval(ofComponent: .day, fromDate: Date())
         
         var numOfHoursADay = daysUntilDue/todo.numOfHoursRequired
         
-        if numOfHoursADay != 2 {
+        if numOfHoursADay >= 2 {
            numOfHoursADay = 2
         }
         
         // Gather intervals
         var intervals = [Int]()
-        for i in 0..<events.count {
-            if i != 0 {
-                let eventInterval = events[i].startDate.interval(ofComponent: .minute, fromDate: events[i-1].endDate)
-                intervals.append(eventInterval)
-            } else {
-                let eventInterval = events[i].endDate.interval(ofComponent: .minute, fromDate: events[i].startDate)
-                intervals.append(eventInterval)
-            }
+        for i in 1..<sampleEvents.count {
+            let eventInterval = sampleEvents[i].startDate.interval(ofComponent: .minute, fromDate: sampleEvents[i-1].endDate)
+//            print("\(i) : \(eventInterval)")
+            intervals.append(eventInterval)
         }
         
         
@@ -75,7 +79,7 @@ class Event: Codable  {
                 let neededInterval = numOfHoursADay * 60
                 let interval = intervals[j]
                 if neededInterval <= interval {
-                    var startTime = events[j].endDate
+                    var startTime = sampleEvents[j].endDate
                     var dateComponents = DateComponents()
                     dateComponents.year = calendar.component(.year, from: startTime)
                     dateComponents.month = calendar.component(.month, from: startTime)
@@ -84,15 +88,16 @@ class Event: Codable  {
                     dateComponents.minute = calendar.component(.minute, from: startTime)
                     dateComponents.timeZone = TimeZone(abbreviation: "PST")
                     startTime = calendar.date(from: dateComponents)!
+//                    print(startTime)
                     let event = Event(title: todo.title, description: todo.description!, startDate: startTime, endDate: startTime.addingTimeInterval(TimeInterval(neededInterval*60)))
-                    events.append(event)
+                    sampleEvents.append(event)
                     break
                 }
             }
             i *= numOfHoursADay
             day += 1
         }
-        return events
+        return sampleEvents
     }
     
     static func createNormalDailyEvents() -> [Event] {
@@ -100,7 +105,7 @@ class Event: Codable  {
         
         let calendar = Calendar.current
         
-        for i in 0...30 {
+        for i in 0..<15 {
             var dateComponents = DateComponents()
             dateComponents.year = calendar.component(.year, from: Date())
             dateComponents.month = calendar.component(.month, from: Date())
