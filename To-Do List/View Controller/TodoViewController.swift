@@ -7,11 +7,13 @@
 //
 
 import UIKit
+import FirebaseFirestore
 
 class TodoViewController: UIViewController {
+    
+    private let db = Firestore.firestore()
 
     let cellIdForTableView = "todoCell"
-    var todos = [Todo]()
     var events = [Event]()
     var selectedTodos = [Todo]()
     var eventsDict = [String:String]()
@@ -69,23 +71,26 @@ class TodoViewController: UIViewController {
         self.view.backgroundColor = backgroundColor
         self.navigationController?.navigationBar.isTranslucent = false
         
-//        if let savedEvents = Event.loadEvents() {
-//            events = savedEvents
-//            print(events)
-//        } else {
-            if let savedTodos = Todo.loadTodos() {
-                todos = savedTodos
-                todos.sort{ $0.dueDate < $1.dueDate }
-                createEventsFrom(todos: todos)
-//                print(events)
-            } else {
-                todos = Todo.loadSampleTodos()
-                todos.sort{ $0.dueDate < $1.dueDate }
-                createEventsFrom(todos: todos)
-            }
-//        }
         
-        updateTaskCount()
+        
+//        // Load events from database
+        loadDocumentsFromDatabase()
+////        if let savedEvents = Event.loadEvents() {
+////            events = savedEvents
+////            print(events)
+////        } else {
+//            if let savedTodos = Todo.loadTodos() {
+//                todos = savedTodos
+//                todos.sort{ $0.dueDate < $1.dueDate }
+//                createEventsFrom(todos: todos)
+////                print(events)
+//            } else {
+//                todos = Todo.loadSampleTodos()
+//                todos.sort{ $0.dueDate < $1.dueDate }
+//                createEventsFrom(todos: todos)
+//            }
+////        }
+        
         setupTableView()
     }
 
@@ -195,6 +200,20 @@ class TodoViewController: UIViewController {
         
     }
     
+    private func loadDocumentsFromDatabase() {
+        db.collection("events").order(by: "startDate", descending: false).getDocuments { (response, error) in
+            if let error = error {
+                print(error)
+            } else {
+                for document in (response?.documents)! {
+                    let event = Event(document: document)
+                    self.events.append(event)
+                }
+            }
+            self.collectionView.reloadData()
+        }
+    }
+    
     func configureCell(cell: JTAppleCell?, cellState: CellState) {
         guard let customCell = cell as? CustomCalendarCell else { return }
         
@@ -249,16 +268,6 @@ class TodoViewController: UIViewController {
         self.present(dvc, animated: true, completion: nil)
     }
     
-    
-    func updateTaskCount() {
-        numOfTaskDone = 0
-        for i in 0..<todos.count {
-            if todos[i].isComplete {
-                numOfTaskDone = numOfTaskDone + 1
-            }
-        }
-    }
-    
     @objc func previousMonth(_: UIButton) {
         self.calendarView.scrollToSegment(.previous)
     }
@@ -296,18 +305,16 @@ class TodoViewController: UIViewController {
 // MARK: Edit and Add Protocols
 
 extension TodoViewController: NewTodoTableViewControllerProtocol, EditTodoTableViewControllerProtocol, EventCollectionViewCellProtocol {
-    func deleteTodo(sender: EventCollectionViewCell) {
+    func deleteEvent(sender: EventCollectionViewCell) {
         if let indexPath = collectionView.indexPath(for: sender) {
             events.remove(at: indexPath.row)
             collectionView.deleteItems(at: [indexPath])
-            updateTaskCount()
-            Todo.saveTodos(todos)
             Event.saveEvents(events)
             collectionView.reloadData()
         }
     }
     
-    @objc func completeTodo(sender: EventCollectionViewCell) {
+    @objc func completeEvent(sender: EventCollectionViewCell) {
         if let indexPath = collectionView.indexPath(for: sender) {
             let event = events[indexPath.row]
             event.isComplete = !event.isComplete
@@ -315,8 +322,6 @@ extension TodoViewController: NewTodoTableViewControllerProtocol, EditTodoTableV
             collectionView.reloadItems(at: [indexPath])
             collectionView.reloadData()
         }
-        updateTaskCount()
-        Todo.saveTodos(todos)
         Event.saveEvents(events)
         collectionView.reloadData()
     }
@@ -326,20 +331,19 @@ extension TodoViewController: NewTodoTableViewControllerProtocol, EditTodoTableV
     }
     
     func addTodo(todo: Todo) {
-        self.todos.append(todo)
-        createEventsFrom(todos: self.todos)
-        Todo.saveTodos(todos)
+        // Save todo after added
+        Todo.saveTodo(todo)
+        // Create event from todos
+        createEventsFrom(todo: todo)
+        // Save event to database
         Event.saveEvents(events)
+        // Reload collectionview
         collectionView.reloadData()
     }
     
-    func createEventsFrom(todos: [Todo]) {
-        if todos.count == 0 {
-            self.events = Event.createNormalDailyEvents()
-        } else {
-            for todo in todos {
-                self.events = Event.createEventsForTodo(todo: todo,events: self.events)
-            }
+    func createEventsFrom(todo: Todo) {
+        for event in Event.createEventsForTodo(todo: todo, events: self.events) {
+            self.events.append(event)
         }
         self.events.sort{ $0.startDate < $1.startDate }
         Event.saveEvents(self.events)

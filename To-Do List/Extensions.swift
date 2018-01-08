@@ -70,22 +70,6 @@ extension UIImageView {
     }
 }
 
-extension UITextView {
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.textColor == UIColor.lightGray {
-            textView.text = nil
-            textView.textColor = UIColor.black
-        }
-    }
-    
-    func textViewDidEndEditing(_ textView: UITextView) {
-        if textView.text.isEmpty {
-            textView.text = "Placeholder"
-            textView.textColor = UIColor.lightGray
-        }
-    }
-}
-
 
 extension Date {
     func interval(ofComponent comp: Calendar.Component, fromDate date: Date) -> Int {

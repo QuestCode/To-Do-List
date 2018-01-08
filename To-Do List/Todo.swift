@@ -7,10 +7,10 @@
 //
 
 import UIKit
+import FirebaseFirestore
 
-class Todo: Codable {
+class Todo {
     var title: String
-    var isComplete: Bool = false
     var dueDate: Date
     var numOfHoursRequired: Int
     var description: String?
@@ -22,23 +22,43 @@ class Todo: Codable {
         self.description = description
     }
     
-    static let DocumentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-    static let archiveURL = DocumentsDirectory.appendingPathComponent("todos.plist")
+    init(document: DocumentSnapshot) {
+        let title = document.data()["title"] as? String
+        let description = document.data()["description"] as? String
+        let hours = document.data()["hoursNeeded"] as? Int
+        let dueDate = document.data()["due_date"] as? Date
+        
+        self.title = title!
+        self.dueDate = dueDate!
+        self.numOfHoursRequired = hours!
+        self.description = description
+        
+    }
     
-    static func saveTodos(_ todos: [Todo]) {
-        let propertyListEncoder = PropertyListEncoder()
-        do {
-            let codedTodos = try? propertyListEncoder.encode(todos)
-            try codedTodos?.write(to: archiveURL, options: .noFileProtection)
-        } catch {
-            print("Writing file failed with error : \(error)")
-        }
+    
+    static func saveTodo(_ todo: Todo) {
+        let db = Firestore.firestore()
+        let dict: [String: Any] = ["title":todo.title,
+                                   "due_date":todo.dueDate,
+                                   "hoursNeeded":todo.numOfHoursRequired,
+                                   "description":todo.description!]
+        db.collection("todos").addDocument(data: dict)
+        
     }
     
     static func loadTodos() -> [Todo]? {
-        guard let codedTodos = try? Data(contentsOf: archiveURL) else { return nil }
-        let propertyListDecoder = PropertyListDecoder()
-        return try? propertyListDecoder.decode(Array<Todo>.self, from: codedTodos)
+        let todos = [Todo]()
+        let db = Firestore.firestore()
+        db.collection("todos").order(by: "due_date", descending: false).getDocuments { (response, error) in
+            if let error = error {
+                print(error)
+            } else {
+                for document in (response?.documents)! {
+                    let todo = Todo(document: document)
+                }
+            }
+        }
+        return todos
     }
     
     static func loadSampleTodos() -> [Todo] {

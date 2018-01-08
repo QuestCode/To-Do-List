@@ -8,8 +8,8 @@
 
 import UIKit
 protocol EventCollectionViewCellProtocol {
-    func deleteTodo(sender: EventCollectionViewCell)
-    func completeTodo(sender: EventCollectionViewCell)
+    func deleteEvent(sender: EventCollectionViewCell)
+    func completeEvent(sender: EventCollectionViewCell)
 }
 
 class EventCollectionViewCell: UICollectionViewCell {
@@ -118,11 +118,11 @@ class EventCollectionViewCell: UICollectionViewCell {
     }
     
     @objc func completeTodo(_: UIButton) {
-        delegate?.completeTodo(sender: self)
+        delegate?.completeEvent(sender: self)
     }
     
     @objc func deleteTodo(_: UIButton) {
-        delegate?.deleteTodo(sender: self)
+        delegate?.deleteEvent(sender: self)
     }
 }
 

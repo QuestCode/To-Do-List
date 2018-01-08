@@ -34,12 +34,13 @@ class NewTodoTableViewController: UIViewController {
     }()
     
     let titleTextField: UITextField = {
-        let txtFld = UITextField(placeholder: "  E.g. Design Sprint...")
+        let txtFld = UITextField(placeholder: "E.g. Design Sprint...")
         txtFld.backgroundColor = .white
         txtFld.layer.borderWidth = 2.0
         txtFld.layer.borderColor = UIColor.lightGray.cgColor
         txtFld.layer.cornerRadius = 3
         txtFld.layer.masksToBounds = true
+        txtFld.layer.sublayerTransform = CATransform3DMakeTranslation(15, 0, 0)
         return txtFld
     }()
     
@@ -51,12 +52,13 @@ class NewTodoTableViewController: UIViewController {
     }()
     
     let totalHoursTextField: UITextField = {
-        let txtFld = UITextField(placeholder: "  8")
+        let txtFld = UITextField(placeholder: "8")
         txtFld.backgroundColor = .white
         txtFld.layer.borderWidth = 2.0
         txtFld.layer.borderColor = UIColor.lightGray.cgColor
         txtFld.layer.cornerRadius = 3
         txtFld.layer.masksToBounds = true
+        txtFld.layer.sublayerTransform = CATransform3DMakeTranslation(15, 0, 0)
         return txtFld
     }()
     

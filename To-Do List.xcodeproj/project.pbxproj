@@ -19,6 +19,8 @@
 		219261CB1FEC740000F09045 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219261CA1FEC740000F09045 /* Extensions.swift */; };
 		219261CE1FEC90F500F09045 /* NewTodoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219261CD1FEC90F500F09045 /* NewTodoViewController.swift */; };
 		21B6A1351FF2CE00001185C9 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B6A1341FF2CE00001185C9 /* HeaderView.swift */; };
+		21C42F34200292B600BC2920 /* DevTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C42F33200292B600BC2920 /* DevTextView.swift */; };
+		21C42F3C20032CF300BC2920 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 21C42F3B20032CF300BC2920 /* GoogleService-Info.plist */; };
 		21E331881FFEF3870091FAD8 /* events.plist in Resources */ = {isa = PBXBuildFile; fileRef = 21E331871FFEF3870091FAD8 /* events.plist */; };
 		21EE19931FF3E684008BA53A /* JTAppleCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EE19811FF3E684008BA53A /* JTAppleCalendarView.swift */; };
 		21EE19941FF3E684008BA53A /* UserInteractionFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EE19821FF3E684008BA53A /* UserInteractionFunctions.swift */; };
@@ -40,6 +42,7 @@
 		21EE19A41FF3E685008BA53A /* GlobalFunctionsAndExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EE19921FF3E684008BA53A /* GlobalFunctionsAndExtensions.swift */; };
 		21EE19A61FF3E79D008BA53A /* CustomCalendarCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EE19A51FF3E79D008BA53A /* CustomCalendarCell.swift */; };
 		21FE8B961FF7343D007E0E35 /* TodoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FE8B951FF7343D007E0E35 /* TodoCollectionViewCell.swift */; };
+		38E052179F4D1DE590E456C1 /* Pods_To_Do_List.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64FEA66171AA2A63CCF9AFAD /* Pods_To_Do_List.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +60,8 @@
 		219261CA1FEC740000F09045 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		219261CD1FEC90F500F09045 /* NewTodoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTodoViewController.swift; sourceTree = "<group>"; };
 		21B6A1341FF2CE00001185C9 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
+		21C42F33200292B600BC2920 /* DevTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevTextView.swift; sourceTree = "<group>"; };
+		21C42F3B20032CF300BC2920 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		21E331871FFEF3870091FAD8 /* events.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = events.plist; sourceTree = "<group>"; };
 		21EE19811FF3E684008BA53A /* JTAppleCalendarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JTAppleCalendarView.swift; sourceTree = "<group>"; };
 		21EE19821FF3E684008BA53A /* UserInteractionFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInteractionFunctions.swift; sourceTree = "<group>"; };
@@ -78,6 +83,9 @@
 		21EE19921FF3E684008BA53A /* GlobalFunctionsAndExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalFunctionsAndExtensions.swift; sourceTree = "<group>"; };
 		21EE19A51FF3E79D008BA53A /* CustomCalendarCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCalendarCell.swift; sourceTree = "<group>"; };
 		21FE8B951FF7343D007E0E35 /* TodoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoCollectionViewCell.swift; sourceTree = "<group>"; };
+		64FEA66171AA2A63CCF9AFAD /* Pods_To_Do_List.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_To_Do_List.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BBFA41EB9CF1F88F565F4762 /* Pods-To-Do List.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-To-Do List.release.xcconfig"; path = "Pods/Target Support Files/Pods-To-Do List/Pods-To-Do List.release.xcconfig"; sourceTree = "<group>"; };
+		F0EC813A4DECC0A6FC8F30C8 /* Pods-To-Do List.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-To-Do List.debug.xcconfig"; path = "Pods/Target Support Files/Pods-To-Do List/Pods-To-Do List.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +93,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38E052179F4D1DE590E456C1 /* Pods_To_Do_List.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,6 +105,8 @@
 			children = (
 				219261B11FEC6E5A00F09045 /* To-Do List */,
 				219261B01FEC6E5A00F09045 /* Products */,
+				5ACC6E1E848E9D776CEFCB9F /* Pods */,
+				524A09AFDC4933BDB2DDDA9C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -118,11 +129,13 @@
 				213F8E991FFAB70A0016FA8F /* Event.swift */,
 				21B6A1341FF2CE00001185C9 /* HeaderView.swift */,
 				219261CA1FEC740000F09045 /* Extensions.swift */,
+				21C42F33200292B600BC2920 /* DevTextView.swift */,
 				219261C41FEC713F00F09045 /* Cells */,
 				219261CC1FEC90BD00F09045 /* View Controller */,
 				219261B91FEC6E5A00F09045 /* Assets.xcassets */,
 				219261BB1FEC6E5A00F09045 /* LaunchScreen.storyboard */,
 				219261BE1FEC6E5A00F09045 /* Info.plist */,
+				21C42F3B20032CF300BC2920 /* GoogleService-Info.plist */,
 			);
 			path = "To-Do List";
 			sourceTree = "<group>";
@@ -172,6 +185,23 @@
 			path = Sources;
 			sourceTree = "<group>";
 		};
+		524A09AFDC4933BDB2DDDA9C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				64FEA66171AA2A63CCF9AFAD /* Pods_To_Do_List.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5ACC6E1E848E9D776CEFCB9F /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F0EC813A4DECC0A6FC8F30C8 /* Pods-To-Do List.debug.xcconfig */,
+				BBFA41EB9CF1F88F565F4762 /* Pods-To-Do List.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -179,9 +209,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 219261C11FEC6E5A00F09045 /* Build configuration list for PBXNativeTarget "To-Do List" */;
 			buildPhases = (
+				0405B4597082274ED049CCEC /* [CP] Check Pods Manifest.lock */,
 				219261AB1FEC6E5A00F09045 /* Sources */,
 				219261AC1FEC6E5A00F09045 /* Frameworks */,
 				219261AD1FEC6E5A00F09045 /* Resources */,
+				BE10A346E17BC009AD43A1B4 /* [CP] Embed Pods Frameworks */,
+				3239C74CE41058DFB6AB01D4 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -237,10 +270,83 @@
 				219261BA1FEC6E5A00F09045 /* Assets.xcassets in Resources */,
 				2133A9E61FF1A26A0092D6CA /* todos.plist in Resources */,
 				21E331881FFEF3870091FAD8 /* events.plist in Resources */,
+				21C42F3C20032CF300BC2920 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0405B4597082274ED049CCEC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-To-Do List-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3239C74CE41058DFB6AB01D4 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-To-Do List/Pods-To-Do List-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BE10A346E17BC009AD43A1B4 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-To-Do List/Pods-To-Do List-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/BoringSSL/openssl.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC/GRPCClient.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-Core/grpc.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-ProtoRPC/ProtoRPC.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-RxLibrary/RxLibrary.framework",
+				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/openssl.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GRPCClient.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpc.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ProtoRPC.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxLibrary.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-To-Do List/Pods-To-Do List-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		219261AB1FEC6E5A00F09045 /* Sources */ = {
@@ -274,6 +380,7 @@
 				21EE19A41FF3E685008BA53A /* GlobalFunctionsAndExtensions.swift in Sources */,
 				21EE19991FF3E684008BA53A /* JTAppleCalendarDelegateProtocol.swift in Sources */,
 				21B6A1351FF2CE00001185C9 /* HeaderView.swift in Sources */,
+				21C42F34200292B600BC2920 /* DevTextView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -400,6 +507,7 @@
 		};
 		219261C21FEC6E5A00F09045 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F0EC813A4DECC0A6FC8F30C8 /* Pods-To-Do List.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -415,6 +523,7 @@
 		};
 		219261C31FEC6E5A00F09045 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BBFA41EB9CF1F88F565F4762 /* Pods-To-Do List.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;

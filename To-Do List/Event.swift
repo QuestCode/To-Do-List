@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import FirebaseFirestore
 
-class Event: Codable  {
+class Event {
     var title: String
     var description: String
     var startDate: Date
@@ -16,30 +17,52 @@ class Event: Codable  {
     var isComplete: Bool = false
     var regularEvent:Bool = false
     
-    public init(title: String,description: String, startDate: Date, endDate: Date) {
+    init(title: String,description: String, startDate: Date, endDate: Date) {
         self.title = title
         self.description = description
         self.startDate = startDate
         self.endDate = endDate
     }
     
-    static let DocumentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-    static let archiveURL = DocumentsDirectory.appendingPathComponent("events.plist")
+    init(document: DocumentSnapshot) {
+        let title = document.data()["title"] as? String
+        let description = document.data()["description"] as? String
+        let startDate = document.data()["startDate"] as? Date
+        let endDate = document.data()["endDate"] as? Date
+        
+        self.title = title!
+        self.description = description!
+        self.startDate = startDate!
+        self.endDate = endDate!
+        
+    }
+    
     
     static func saveEvents(_ events: [Event]) {
-        let propertyListEncoder = PropertyListEncoder()
-        do {
-            let codedEvents = try? propertyListEncoder.encode(events)
-            try codedEvents?.write(to: archiveURL, options: .noFileProtection)
-        } catch {
-            print("Writing file failed with error : \(error)")
+        let db = Firestore.firestore()
+        for event in events {
+            
+            let dict: [String: Any] = ["title":event.title,
+                                       "startDate":event.startDate,
+                                       "endDate":event.endDate,
+                                       "description":event.description]
+            db.collection("events").addDocument(data: dict)
         }
     }
     
     static func loadEvents() -> [Event]? {
-        guard let codedEvents = try? Data(contentsOf: archiveURL) else { return nil }
-        let propertyListDecoder = PropertyListDecoder()
-        return try? propertyListDecoder.decode(Array<Event>.self, from: codedEvents)
+        let events = [Event]()
+        let db = Firestore.firestore()
+        db.collection("events").order(by: "due_date", descending: false).getDocuments { (response, error) in
+            if let error = error {
+                print(error)
+            } else {
+                for document in (response?.documents)! {
+                    let event = Event(document: document)
+                }
+            }
+        }
+        return events
     }
     
     public static func createEventsForTodo(todo: Todo,events: [Event]) -> [Event] {
@@ -150,6 +173,8 @@ class Event: Codable  {
             dinner.regularEvent = true
             events.append(dinner)
         }
+        
+        events.sort{ $0.startDate < $1.startDate }
         
         return events
     }
